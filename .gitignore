@@ -1,9 +1,10 @@
+
 /mean-stack-example/file1
 /mean-stack-example/file2
 /mean-stack-example/file3
 
-./mean-stack-example/README.md
-./mean-stack-example/newfile.txtS
+/mean-stack-example/README.md
+/mean-stack-example/newfile.txt
 # Logs
 logs
 *.log
