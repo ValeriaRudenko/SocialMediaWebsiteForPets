@@ -1,6 +1,5 @@
-
-./mean-stack-example/README.md
-./mean-stack-example/newfile.txtS
+/mean-stack-example/README.md
+/mean-stack-example/newfile.txt
 # Logs
 logs
 *.log
