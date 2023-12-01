@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
-import './SignIn.css';
+import './SignIn.css'; // Assuming this file contains some styling for the component
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
@@ -15,6 +14,10 @@ const SignIn = () => {
             });
 
             console.log('Sign In Successful:', response.data.message);
+
+            // Store the token in session storage
+            sessionStorage.setItem('token', response.data.token);
+
             // Add logic to redirect the user after successful sign-in, e.g., history.push('/dashboard');
         } catch (error) {
             console.error('Error Signing In:', error.response.data.message);
