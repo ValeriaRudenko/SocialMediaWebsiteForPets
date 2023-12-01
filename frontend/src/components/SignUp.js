@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './SignUp.css'; // Import the CSS file
 
-
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [signupMessage, setSignupMessage] = useState('');
 
     const handleSignUp = async () => {
         try {
@@ -17,11 +17,13 @@ const SignUp = () => {
                 email,
                 password,
             });
-
+            // Store the token in session storage
+            sessionStorage.setItem('token', response.data.token);
             console.log('Sign Up Successful:', response.data.message);
-            // Add logic to redirect the user after successful sign-up, e.g., history.push('/dashboard');
+            setSignupMessage(response.data.message);
         } catch (error) {
             console.error('Error Signing Up:', error.response.data.message);
+            setSignupMessage(error.response.data.message);
         }
     };
 
@@ -45,6 +47,7 @@ const SignUp = () => {
                     Sign Up
                 </button>
             </form>
+            {signupMessage && <p>{signupMessage}</p>}
         </div>
     );
 };

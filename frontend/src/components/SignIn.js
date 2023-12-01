@@ -1,3 +1,5 @@
+// frontend/src/components/SignIn.js
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import './SignIn.css'; // Assuming this file contains some styling for the component
@@ -5,6 +7,7 @@ import './SignIn.css'; // Assuming this file contains some styling for the compo
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [signInMessage, setSignInMessage] = useState('');
 
     const handleSignIn = async () => {
         try {
@@ -12,15 +15,14 @@ const SignIn = () => {
                 email,
                 password,
             });
-
-            console.log('Sign In Successful:', response.data.message);
-
             // Store the token in session storage
             sessionStorage.setItem('token', response.data.token);
 
-            // Add logic to redirect the user after successful sign-in, e.g., history.push('/dashboard');
+            console.log('Sign Up Successful:', response.data.message);
+            setSignInMessage(response.data.message);
         } catch (error) {
-            console.error('Error Signing In:', error.response.data.message);
+            console.error('Error Signing Up:', error.response.data.message);
+            setSignInMessage(error.response.data.message);
         }
     };
 
@@ -40,6 +42,7 @@ const SignIn = () => {
                     Sign In
                 </button>
             </form>
+            {signInMessage && <p>{signInMessage}</p>}
         </div>
     );
 };
