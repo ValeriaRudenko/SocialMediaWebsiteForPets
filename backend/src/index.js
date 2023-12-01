@@ -4,10 +4,12 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
 const User = require('./models/User');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const secretKey='efbhfeoas8yf8734bf3404yn &(*NR(*#Yn2vr'
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -61,14 +63,15 @@ app.post('/api/signin', async (req, res) => {
             return res.status(401).json({ message: 'Incorrect email or password' });
         }
 
-        // Store user information in the session
-        req.session.user = {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-        };
+        // Create JWT token
+        const token = jwt.sign(
+            { userId: user._id, username: user.username, email: user.email },
+            secretKey,
+            { expiresIn: '1d' }
+        );
 
-        res.status(200).json({ message: 'User signed in successfully' });
+        // Send token to the client
+        res.status(200).json({ message: 'User signed in successfully', token });
     } catch (error) {
         console.error('Error signing in:', error);
         res.status(500).json({ message: 'Internal server error' });
