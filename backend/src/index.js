@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const secretKey='efbhfeoas8yf8734bf3404yn &(*NR(*#Yn2vr'
+const secretKey='efbhfeefsgergergre4645ge4vw4tfs4gesgr'
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -39,7 +39,12 @@ app.post('/api/signup', async (req, res) => {
 
         const newUser = new User({ username, email, password });
         await newUser.save();
-
+        //Create JWT token
+        const token = jwt.sign(
+            { userId: newUser._id, username: newUser.username, email: newUser.email },
+            secretKey, // replace with a secure secret key
+            { expiresIn: '1d' } // set expiration time
+        );
         // Store user information in the session
         req.session.user = {
             id: newUser._id,
@@ -47,7 +52,7 @@ app.post('/api/signup', async (req, res) => {
             email: newUser.email,
         };
 
-        res.status(201).json({ message: 'User signed up successfully' });
+        res.status(201).json({ message: 'User signed up successfully', token });
     } catch (error) {
         console.error('Error signing up:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -70,8 +75,8 @@ app.post('/api/signin', async (req, res) => {
             { expiresIn: '1d' }
         );
 
-        // Send token to the client
-        res.status(200).json({ message: 'User signed in successfully', token });
+        // Send token to the client along with user information
+        res.status(200).json({ message: 'User signed in successfully',  token });
     } catch (error) {
         console.error('Error signing in:', error);
         res.status(500).json({ message: 'Internal server error' });
