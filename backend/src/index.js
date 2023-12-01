@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -9,7 +11,6 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const secretKey='efbhfeefsgergergre4645ge4vw4tfs4gesgr'
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -17,15 +18,24 @@ app.use(bodyParser.json());
 // Setup session management
 app.use(
     session({
-        secret: 'hugvrshdgsinodvsijo7683278rfehwiufg7t4wg87',
+        secret: process.env.SESSION_SECRET || 'defaultSessionSecret',
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: false }, // For development purposes, set secure to false. In production, set it to true if using HTTPS
+        cookie: { secure: false },
     })
 );
 
-// Connect to MongoDB (replace 'your-mongodb-uri' with your actual MongoDB URI)
-mongoose.connect('mongodb://localhost:27017/mern_stack', { useNewUrlParser: true, useUnifiedTopology: true });
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mern_stack', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Create a middleware function for generating JWT tokens
+function generateToken(user) {
+    return jwt.sign(
+        { userId: user._id, username: user.username, email: user.email },
+        process.env.SECRET_KEY || 'defaultSecretKey',
+        { expiresIn: '1d' }
+    );
+}
 
 // Routes
 app.post('/api/signup', async (req, res) => {
@@ -39,13 +49,9 @@ app.post('/api/signup', async (req, res) => {
 
         const newUser = new User({ username, email, password });
         await newUser.save();
-        //Create JWT token
-        const token = jwt.sign(
-            { userId: newUser._id, username: newUser.username, email: newUser.email },
-            secretKey, // replace with a secure secret key
-            { expiresIn: '1d' } // set expiration time
-        );
-        // Store user information in the session
+
+        const token = generateToken(newUser);
+
         req.session.user = {
             id: newUser._id,
             username: newUser.username,
@@ -54,7 +60,7 @@ app.post('/api/signup', async (req, res) => {
 
         res.status(201).json({ message: 'User signed up successfully', token });
     } catch (error) {
-        console.error('Error signing up:', error);
+        console.error('Error signing up:', error.message || error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
@@ -68,22 +74,15 @@ app.post('/api/signin', async (req, res) => {
             return res.status(401).json({ message: 'Incorrect email or password' });
         }
 
-        // Create JWT token
-        const token = jwt.sign(
-            { userId: user._id, username: user.username, email: user.email },
-            secretKey,
-            { expiresIn: '1d' }
-        );
+        const token = generateToken(user);
 
-        // Send token to the client along with user information
-        res.status(200).json({ message: 'User signed in successfully',  token });
+        res.status(200).json({ message: 'User signed in successfully', token });
     } catch (error) {
-        console.error('Error signing in:', error);
+        console.error('Error signing in:', error.message || error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
 
-// Check if the user is authenticated
 app.get('/api/check-auth', (req, res) => {
     if (req.session.user) {
         res.status(200).json({ authenticated: true, user: req.session.user });
