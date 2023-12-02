@@ -33,7 +33,8 @@ const Profile = () => {
     };
 
     return (
-        <div id="profile-container">
+        <div id="profile-container" className="container">
+            <form>
             <h2 id="profile-heading">User Profile</h2>
             <img
                 id="avatar-image"
@@ -147,6 +148,7 @@ const Profile = () => {
                     )}
                 </div>
             </div>
+            </form>
         </div>
     );
 };
