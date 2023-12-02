@@ -11,7 +11,7 @@ const Navigation = () => {
     const [currentPage, setCurrentPage] = useState('signUp');
 
     return (
-        <body>
+        <div>
         <div className="wrapper">
         <header>
             <div className="row">
@@ -37,7 +37,7 @@ const Navigation = () => {
             {currentPage === 'signIn' && <SignIn/>}
             {currentPage === 'profile' && <Profile/>}
         </div>
-        </body>
+        </div>
     )
 
 };
