@@ -1,0 +1,25 @@
+/* Basic styling */
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Default state */
+button {
+    background-color: #ff69b4; /* Pink color */
+    color: #fff; /* White text */
+    border: 2px solid #ff69b4; /* Pink border */
+}
+
+/* Hover state */
+button:hover {
+    background-color: #ff4081; /* Lighter pink on hover */
+    color: #fff; /* White text on hover */
+    border: 2px solid #ff4081; /* Lighter pink border on hover */
+}

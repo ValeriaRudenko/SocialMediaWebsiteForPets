@@ -1,45 +1,25 @@
-import React, {useState} from 'react';
-import Home from './Home';
-import Subscriptions from './Subscriptions';
-import Additions from './Additions';
-import SignUp from './SignUp';
-import SignIn from './SignIn';
-import Profile from './Profile';
-// import './Navigation.css';
+import React from 'react';
+import { usePageContext } from './PageContext';
 
 const Navigation = () => {
-    const [currentPage, setCurrentPage] = useState('signUp');
-
+    const { handlePageChange } = usePageContext();
     return (
-        <div>
-        <div className="wrapper">
         <header>
             <div className="row">
-            <div className="col"></div> {/*Empty column*/}
-            <div className="col d-flex justify-content-center">
-                <button onClick={() => setCurrentPage('home')}>Home</button>
-                <button onClick={() => setCurrentPage('subscriptions')}>Subscriptions</button>
-                <button onClick={() => setCurrentPage('adds')}>Additions</button>
-            </div>
+                <div className="col"></div>
+                <div className="col d-flex justify-content-center">
+                    <button onClick={() => handlePageChange('home')}>Home</button>
+                    <button onClick={() => handlePageChange('subscriptions')}>Subscriptions</button>
+                    <button onClick={() => handlePageChange('adds')}>Additions</button>
+                </div>
                 <div className="col d-flex justify-content-end">
-                    <button onClick={() => setCurrentPage('profile')}>Profile</button>
-                    <button onClick={() => setCurrentPage('signUp')}>Sign Up</button>
-                    <button onClick={() => setCurrentPage('signIn')}>Sign In</button>
+                    <button onClick={() => handlePageChange('profile')}>Profile</button>
+                    <button onClick={() => handlePageChange('signUp')}>Sign Up</button>
+                    <button onClick={() => handlePageChange('signIn')}>Sign In</button>
                 </div>
             </div>
         </header>
-        </div>
-        <div>
-            {currentPage === 'home' && <Home/>}
-            {currentPage === 'subscriptions' && <Subscriptions/>}
-            {currentPage === 'adds' && <Additions/>}
-            {currentPage === 'signUp' && <SignUp/>}
-            {currentPage === 'signIn' && <SignIn/>}
-            {currentPage === 'profile' && <Profile/>}
-        </div>
-        </div>
-    )
-
+    );
 };
 
 export default Navigation;
