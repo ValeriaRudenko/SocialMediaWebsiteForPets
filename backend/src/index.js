@@ -94,6 +94,57 @@ app.get('/api/check-auth', (req, res) => {
     }
 });
 
+// Add a route to get user profile data
+app.get('/api/profile', async (req, res) => {
+    try {
+        // Retrieve user profile data based on the user's ID (you may need to modify this logic)
+        const user = await User.findById(req.session.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({
+            id: user._id,
+            fullName: user.fullName,
+            age: user.age,
+            breed: user.breed,
+            pettype: user.pettype,
+            avatar: user.avatar, // You may need to handle avatar separately (e.g., serve static files)
+        });
+    } catch (error) {
+        console.error('Error retrieving user profile:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Add a route to update user profile data
+app.post('/api/profile', async (req, res) => {
+    try {
+        // Retrieve user based on the user's ID (you may need to modify this logic)
+        const user = await User.findById(req.session.user.id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Update user profile data
+        user.fullName = req.body.fullName || user.fullName;
+        user.age = req.body.age || user.age;
+        user.breed = req.body.breed || user.breed;
+        user.pettype = req.body.pettype || user.pettype;
+
+        // Save the updated user
+        await user.save();
+
+        res.status(200).json({ message: 'User profile updated successfully' });
+    } catch (error) {
+        console.error('Error updating user profile:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
