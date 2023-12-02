@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const chai = require('chai');
-const app = require('../index.js'); // Replace with the actual path to your app file
+const app = require('../App.js'); // Replace with the actual path to your app file
 
 const expect = chai.expect;
 const api = supertest(app);
