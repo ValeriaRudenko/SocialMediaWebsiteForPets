@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import axios from 'axios';
-import './SignUp.css'; // Import the CSS file
+//import './Sign.css'; // Import the CSS file
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
@@ -36,15 +36,15 @@ const SignUp = () => {
                     <h2>Sign Up</h2>
                     <form>
                         <label>
-                            Username:
+                            <p>Username:</p>
                             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
                         </label>
                         <label>
-                            Email:
+                            <p>Email:</p>
                             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                         </label>
                         <label>
-                            Password:
+                            <p>Password:</p>
                             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                         </label>
                         <button type="button" onClick={handleSignUp}>

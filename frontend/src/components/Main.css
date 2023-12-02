@@ -7,6 +7,7 @@ button {
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
+    margin: 20px;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
@@ -22,4 +23,8 @@ button:hover {
     background-color: #ff4081; /* Lighter pink on hover */
     color: #fff; /* White text on hover */
     border: 2px solid #ff4081; /* Lighter pink border on hover */
+}
+
+div {
+    font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
 }

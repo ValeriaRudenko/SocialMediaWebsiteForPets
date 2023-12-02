@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import axios from 'axios';
-import './SignIn.css'; // Assuming this file contains some styling for the component
+import './Sign.css'; // Assuming this file contains some styling for the component
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
@@ -39,11 +39,11 @@ const SignIn = () => {
                         <h2>Sign In</h2>
                         <form>
                             <label>
-                                Email:
+                                <p>Email: </p>
                                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                             </label>
                             <label>
-                                Password:
+                                <p>Password:</p>
                                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                             </label>
                             <button type="button" onClick={handleSignIn}>
