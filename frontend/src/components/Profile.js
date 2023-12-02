@@ -33,122 +33,130 @@ const Profile = () => {
     };
 
     return (
-        <div id="profile-container" className="container">
-            <form>
-            <h2 id="profile-heading">User Profile</h2>
-            <img
-                id="avatar-image"
-                className={avatar ? 'avatar-with-image' : ''}
-                src={avatar ? URL.createObjectURL(avatar) : 'default-avatar.jpg'}
-                alt="Avatar"
-                onClick={handleAvatarClick}
-            />
-            <div>
-                {(!avatar || avatar === null) && (
-                    <div>
-                        <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
-                            Upload Avatar
-                        </label>
-                        <input
-                            type="file"
-                            id="avatar-upload"
-                            accept="image/*"
-                            onChange={handleUpload}
-                            hidden
+        <div className="row">
+            <div className="col"></div>
+            {/*Empty column*/}
+            <div className="col d-flex justify-content-center">
+                <div id="profile-container" className="container">
+                    <form>
+                        <h2 id="profile-heading">User Profile</h2>
+                        <img
+                            id="avatar-image"
+                            className={avatar ? 'avatar-with-image' : ''}
+                            src={avatar ? URL.createObjectURL(avatar) : 'default-avatar.jpg'}
+                            alt="Avatar"
+                            onClick={handleAvatarClick}
                         />
-                    </div>
-                )}
-                {avatar && (
-                    <div>
-                        <button className="upload-label" id="delete-avatar" onClick={handleDeleteAvatar}>
-                            Delete Avatar
-                        </button>
-                        <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
-                            Change Avatar
-                        </label>
-                        <input
-                            type="file"
-                            id="avatar-upload"
-                            accept="image/*"
-                            onChange={handleUpload}
-                            hidden
-                        />
-                    </div>
-                )}
-
-
-                <div>
-                    {isEditMode ? (
                         <div>
-                            <label htmlFor="fullName">Full Name:</label>
-                            <input
-                                type="text"
-                                id="fullName"
-                                value={fullName}
-                                onChange={(event) => handleInputChange(event, setFullName)}
-                            />
-                        </div>
-                    ) : (
-                        <p>
-                            <strong>Full Name:</strong> {fullName}
-                        </p>
-                    )}
+                            {(!avatar || avatar === null) && (
+                                <div>
+                                    <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
+                                        Upload Avatar
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="avatar-upload"
+                                        accept="image/*"
+                                        onChange={handleUpload}
+                                        hidden
+                                    />
+                                </div>
+                            )}
+                            {avatar && (
+                                <div>
+                                    <button className="upload-label" id="delete-avatar" onClick={handleDeleteAvatar}>
+                                        Delete Avatar
+                                    </button>
+                                    <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
+                                        Change Avatar
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="avatar-upload"
+                                        accept="image/*"
+                                        onChange={handleUpload}
+                                        hidden
+                                    />
+                                </div>
+                            )}
 
-                    {isEditMode ? (
-                        <div>
-                            <label htmlFor="age">Age:</label>
-                            <input
-                                type="text"
-                                id="age"
-                                value={age}
-                                onChange={(event) => handleInputChange(event, setAge)}
-                            />
-                        </div>
-                    ) : (
-                        <p>
-                            <strong>Age:</strong> {age}
-                        </p>
-                    )}
 
-                    {isEditMode ? (
-                        <div>
-                            <label htmlFor="Breed">Breed:</label>
-                            <input
-                                type="text"
-                                id="breed"
-                                value={breed}
-                                onChange={(event) => handleInputChange(event, setBreed)}
-                            />
-                        </div>
-                    ) : (
-                        <p>
-                            <strong>Breed:</strong> {breed}
-                        </p>
-                    )}
-                    {isEditMode ? (
-                        <div>
-                            <label htmlFor="PetType">Pet type:</label>
-                            <input
-                                type="text"
-                                id="pettype"
-                                value={pettype}
-                                onChange={(event) => handleInputChange(event, setPetType)}
-                            />
-                        </div>
-                    ) : (
-                        <p>
-                            <strong>Pet type:</strong> {pettype}
-                        </p>
-                    )}
+                            <div>
+                                {isEditMode ? (
+                                    <div>
+                                        <label htmlFor="fullName">Full Name:</label>
+                                        <input
+                                            type="text"
+                                            id="fullName"
+                                            value={fullName}
+                                            onChange={(event) => handleInputChange(event, setFullName)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <p>
+                                        <strong>Full Name:</strong> {fullName}
+                                    </p>
+                                )}
 
-                    {isEditMode ? (
-                        <button onClick={handleSaveClick}>Save</button>
-                    ) : (
-                        <button onClick={handleEditClick}>Edit</button>
-                    )}
+                                {isEditMode ? (
+                                    <div>
+                                        <label htmlFor="age">Age:</label>
+                                        <input
+                                            type="text"
+                                            id="age"
+                                            value={age}
+                                            onChange={(event) => handleInputChange(event, setAge)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <p>
+                                        <strong>Age:</strong> {age}
+                                    </p>
+                                )}
+
+                                {isEditMode ? (
+                                    <div>
+                                        <label htmlFor="Breed">Breed:</label>
+                                        <input
+                                            type="text"
+                                            id="breed"
+                                            value={breed}
+                                            onChange={(event) => handleInputChange(event, setBreed)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <p>
+                                        <strong>Breed:</strong> {breed}
+                                    </p>
+                                )}
+                                {isEditMode ? (
+                                    <div>
+                                        <label htmlFor="PetType">Pet type:</label>
+                                        <input
+                                            type="text"
+                                            id="pettype"
+                                            value={pettype}
+                                            onChange={(event) => handleInputChange(event, setPetType)}
+                                        />
+                                    </div>
+                                ) : (
+                                    <p>
+                                        <strong>Pet type:</strong> {pettype}
+                                    </p>
+                                )}
+
+                                {isEditMode ? (
+                                    <button onClick={handleSaveClick}>Save</button>
+                                ) : (
+                                    <button onClick={handleEditClick}>Edit</button>
+                                )}
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            </form>
+            <div className="col"></div>
+            {/*Empty column*/}
         </div>
     );
 };

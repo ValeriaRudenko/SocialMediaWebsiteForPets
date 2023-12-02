@@ -1,6 +1,6 @@
 // frontend/src/components/SignUp.js
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import './SignUp.css'; // Import the CSS file
 
@@ -28,26 +28,34 @@ const SignUp = () => {
     };
 
     return (
-        <div className="container">
-            <h2>Sign Up</h2>
-            <form>
-                <label>
-                    Username:
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                </label>
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </label>
-                <label>
-                    Password:
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </label>
-                <button type="button" onClick={handleSignUp}>
-                    Sign Up
-                </button>
-            </form>
-            {signupMessage && <p>{signupMessage}</p>}
+        <div className="row">
+            <div className="col"></div>
+            {/*Empty column*/}
+            <div className="col d-flex justify-content-center">
+                <div className="container">
+                    <h2>Sign Up</h2>
+                    <form>
+                        <label>
+                            Username:
+                            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                        </label>
+                        <label>
+                            Email:
+                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                        </label>
+                        <label>
+                            Password:
+                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        </label>
+                        <button type="button" onClick={handleSignUp}>
+                            Sign Up
+                        </button>
+                    </form>
+                    {signupMessage && <p>{signupMessage}</p>}
+                </div>
+            </div>
+            <div className="col"></div>
+            {/*Empty column*/}
         </div>
     );
 };

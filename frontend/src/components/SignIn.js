@@ -1,6 +1,6 @@
 // frontend/src/components/SignIn.js
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import './SignIn.css'; // Assuming this file contains some styling for the component
 
@@ -27,24 +27,39 @@ const SignIn = () => {
     };
 
     return (
-        <div className="container">
-            <h2>Sign In</h2>
-            <form>
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </label>
-                <label>
-                    Password:
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </label>
-                <button type="button" onClick={handleSignIn}>
-                    Sign In
-                </button>
-            </form>
-            {signInMessage && <p>{signInMessage}</p>}
-        </div>
+
+
+            <div className="row">
+                <div className="col"></div>
+                {/*Empty column*/}
+
+
+                <div className="col d-flex justify-content-center">
+                    <div className="container">
+                        <h2>Sign In</h2>
+                        <form>
+                            <label>
+                                Email:
+                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                            </label>
+                            <label>
+                                Password:
+                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                            </label>
+                            <button type="button" onClick={handleSignIn}>
+                                Sign In
+                            </button>
+                        </form>
+                        {signInMessage && <p>{signInMessage}</p>}
+                    </div>
+                </div>
+                <div className="col"></div>
+                {/*Empty column*/}
+
+            </div>
+
     );
+
 };
 
 export default SignIn;
