@@ -46,7 +46,7 @@ const SignIn = () => {
                                 <p>Password:</p>
                                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                             </label>
-                            <button type="button" onClick={handleSignIn}>
+                            <button className="button_in_cont" type="button" onClick={handleSignIn}>
                                 Sign In
                             </button>
                         </form>

@@ -194,11 +194,11 @@ const Profile = () => {
                                 )}
 
                                 {isEditMode ? (
-                                    <button type="button" onClick={handleSaveClick}>
+                                    <button className="button_in_cont" type="button" onClick={handleSaveClick}>
                                         Save
                                     </button>
                                 ) : (
-                                    <button type="button" onClick={handleEditClick}>
+                                    <button className="button_in_cont" type="button" onClick={handleEditClick}>
                                         Edit
                                     </button>
                                 )}

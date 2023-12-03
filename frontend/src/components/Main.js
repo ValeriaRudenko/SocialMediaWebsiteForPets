@@ -11,28 +11,30 @@ import './Main.css';
 
 const Main = () => {
     return (
-        <PageProvider>
-            <Navigation />
-            <div>
+        <div className="main">
+            <PageProvider>
+                <Navigation/>
                 <div>
-                    <Content />
+                    <div>
+                        <Content/>
+                    </div>
                 </div>
-            </div>
-        </PageProvider>
+            </PageProvider>
+        </div>
     );
 };
 
 const Content = () => {
-    const { currentPage } = usePageContext();
+    const {currentPage} = usePageContext();
 
     return (
         <>
-            {currentPage === 'home' && <Home />}
-            {currentPage === 'subscriptions' && <Subscriptions />}
-            {currentPage === 'adds' && <Additions />}
-            {currentPage === 'signUp' && <SignUp />}
-            {currentPage === 'signIn' && <SignIn />}
-            {currentPage === 'profile' && <Profile />}
+            {currentPage === 'home' && <Home/>}
+            {currentPage === 'subscriptions' && <Subscriptions/>}
+            {currentPage === 'adds' && <Additions/>}
+            {currentPage === 'signUp' && <SignUp/>}
+            {currentPage === 'signIn' && <SignIn/>}
+            {currentPage === 'profile' && <Profile/>}
         </>
     );
 };

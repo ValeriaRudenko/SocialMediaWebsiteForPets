@@ -1,7 +1,7 @@
 
 #avatar-image.avatar-with-image {
     cursor: pointer;
-    border: 2px solid indigo;
+    border: 3px solid #B0578D;
     border-radius: 50%;
     width: 100px; /* Регулюєте розмір кнопки зображення */
     height: 100px; /* Регулюєте розмір кнопки зображення */
@@ -20,14 +20,17 @@ form {
 }
 
 .upload-label {
-    background-color: #ff69b4; /* Pink color */
+    background-color: #B0578D; /* Pink color */
     color: #fff; /* White text */
-    border: 2px solid #ff69b4; /* Pink border */
+    border: 2px solid #B0578D; /* Pink border */
 }
 
 /* Hover state */
-.upload-label:hover {
-    background-color: #ff4081; /* Lighter pink on hover */
-    color: #fff; /* White text on hover */
-    border: 2px solid #ff4081; /* Lighter pink border on hover */
+/*.upload-label:hover {*/
+/*    background-color: #B0578D; !* Lighter pink on hover *!*/
+/*    color: #fff; !* White text on hover *!*/
+/*    !*border: 2px solid #ff4081; !* Lighter pink border on hover *!*!*/
+/*}*/
+.button_in_cont {
+    background-color: #B0578D;
 }
