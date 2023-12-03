@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require('../models/User.js');
 const Pet = require('../models/Pet.js');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
 
 // Create a middleware function for generating JWT tokens
 function generateToken(user) {
@@ -176,5 +178,95 @@ router.post('/profile', async (req, res) => {
     }
 });
 
+// File upload configuration
+const storage = multer.diskStorage({
+    destination: './public/images/',
+    filename: (req, file, cb) => {
+        const originalExtension = require('path').extname(file.originalname);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const fileName = file.fieldname + '-' + uniqueSuffix + originalExtension;
+        cb(null, fileName);
+    },
+});
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2 MB
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed.'));
+        }
+    },
+});
+router.post('/upload', upload.single('image'), async (req, res) => {
+    try {
+        // Check if 'image' is null
+        if (!req.file) {
+            return res.status(400).json({ error: 'No image file provided' });
+        }
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const userId = decodedToken.userId;
+
+        // Retrieve user from the database based on the user ID
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Save the avatar path to the user document
+        user.avatar = req.file.filename;
+        await user.save();
+
+        res.json({ message: 'Image uploaded successfully', avatarPath: user.avatar });
+    } catch (error) {
+        console.error('Error uploading image:', error.message || error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.get('/avatar', async (req, res) => {
+    try {
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const userId = decodedToken.userId;
+
+        // Retrieve user from the database based on the user ID
+        const user = await User.findById(userId);
+        if (!user || !user.avatar) {
+            return res.status(404).json({ message: 'User or avatar not found' });
+        }
+
+        // Construct the path to the avatar image
+        const avatarPath = path.join(__dirname, '../../public/images/', user.avatar);
+
+        // Send the image file
+        res.sendFile(avatarPath);
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        console.error('Error retrieving user avatar:', error.message || error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 module.exports = router;

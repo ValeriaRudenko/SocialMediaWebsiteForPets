@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
+// ... (import statements)
 
 const Profile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -32,18 +33,51 @@ const Profile = () => {
             setAge(userData.age);
             setBreed(userData.breed);
             setPetType(userData.pettype);
+
+            // Fetch the avatar image
+            // const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
+            //     headers: {
+            //         Authorization: `Bearer ${token}`,
+            //     }});
+            fetch('http://localhost:5000/api/avatar', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    if (blob.type.startsWith('image/jpeg') || blob.type.startsWith('image/png')) {
+                        // Check if the blob is of type JPEG or PNG
+                        const objectURL = URL.createObjectURL(blob);
+                        setAvatar(objectURL);
+                    } else {
+                        throw new Error('The response is not a JPEG or PNG image.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching image:', error);
+                });
+
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
         }
     };
 
-    const handleUpload = (event) => {
-        const file = event.target.files[0];
-        setAvatar(file);
-    };
+
 
     const handleAvatarClick = () => {
+        // Trigger the file input click
         document.getElementById('avatar-upload').click();
+
+        // If an avatar is already selected, upload it
+        if (avatar) {
+            handleImageUpload();
+        }
     };
 
     const handleInputChange = (event, setValue) => {
@@ -81,10 +115,30 @@ const Profile = () => {
         }
     };
 
+    const handleImageUpload = async (event) => {
+        try {
+            const token = sessionStorage.getItem('token');
+            const file = event.target.files[0];
+            const formData = new FormData();
+            formData.append('image', file); // 'image' should match the fieldname used in multer.single()
+
+            const response = await axios.post('http://localhost:5000/api/upload', formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            console.log(response.data); // Log or handle the server response
+        } catch (error) {
+            console.error('Error uploading image:', error.message || error);
+        }
+        fetchProfileData();
+    };
+
     return (
         <div className="row">
             <div className="col"></div>
-            {/* Empty column */}
             <div className="col d-flex justify-content-center">
                 <div id="profile-container" className="container">
                     <form>
@@ -92,12 +146,12 @@ const Profile = () => {
                         <img
                             id="avatar-image"
                             className={avatar ? 'avatar-with-image' : ''}
-                            src={avatar ? URL.createObjectURL(avatar) : 'default-avatar.jpg'}
+                            src={avatar}
                             alt="Avatar"
                             onClick={handleAvatarClick}
                         />
                         <div>
-                            {(!avatar || avatar === null) && (
+                            {(!avatar || false) && (
                                 <div>
                                     <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
                                         Upload Avatar
@@ -106,7 +160,7 @@ const Profile = () => {
                                         type="file"
                                         id="avatar-upload"
                                         accept="image/*"
-                                        onChange={handleUpload}
+                                        onChange={handleImageUpload}
                                         hidden
                                     />
                                 </div>
@@ -123,7 +177,7 @@ const Profile = () => {
                                         type="file"
                                         id="avatar-upload"
                                         accept="image/*"
-                                        onChange={handleUpload}
+                                        onChange={handleImageUpload}
                                         hidden
                                     />
                                 </div>
@@ -208,7 +262,6 @@ const Profile = () => {
                 </div>
             </div>
             <div className="col"></div>
-            {/* Empty column */}
         </div>
     );
 };
