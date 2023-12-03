@@ -9,22 +9,23 @@ button {
     cursor: pointer;
     margin: 20px;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-/* Default state */
-button {
-    background-color: #ff69b4; /* Pink color */
+    background-color: #D988B9; /* Pink color */
     color: #fff; /* White text */
-    border: 2px solid #ff69b4; /* Pink border */
+    border: 2px solid #B0578D; /* Pink border */
 }
 
 /* Hover state */
 button:hover {
-    background-color: #ff4081; /* Lighter pink on hover */
+    background-color: #B0578D; /* Lighter pink on hover */
     color: #fff; /* White text on hover */
-    border: 2px solid #ff4081; /* Lighter pink border on hover */
+    border: 2px solid #B0578D; /* Lighter pink border on hover */
 }
 
 div {
     font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
 }
+.main {
+    background-color: #FFE4D6;
+}
+
+
