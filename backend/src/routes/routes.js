@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require('../models/User.js');
 const Pet = require('../models/Pet.js');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
 
 // Create a middleware function for generating JWT tokens
 function generateToken(user) {
@@ -173,6 +175,43 @@ router.post('/profile', async (req, res) => {
 
         console.error('Error updating user profile:', error.message || error);
         res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// File upload configuration
+const storage = multer.diskStorage({
+    destination: './public/images/',
+    filename: (req, file, cb) => {
+        const originalExtension = require('path').extname(file.originalname);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const fileName = file.fieldname + '-' + uniqueSuffix + originalExtension;
+        cb(null, fileName);
+    },
+});
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2 MB
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed.'));
+        }
+    },
+});
+router.post('/upload', upload.single('image'), (req, res) => {
+    try {
+        // Check if 'image' is null
+        if (!req.file) {
+            return res.status(400).json({ error: 'No image file provided' });
+        }
+
+        // The uploaded file can be accessed via req.file
+        // You can save additional information to the database or perform other actions as needed
+        res.json({ message: 'Image uploaded successfully' });
+    } catch (error) {
+        console.error('Error uploading image:', error.message || error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

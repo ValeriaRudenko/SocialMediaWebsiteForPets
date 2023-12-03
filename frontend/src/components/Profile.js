@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
+// ... (import statements)
 
 const Profile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -38,12 +39,19 @@ const Profile = () => {
     };
 
     const handleUpload = (event) => {
+        console.log('Uploading profile')
         const file = event.target.files[0];
         setAvatar(file);
     };
 
     const handleAvatarClick = () => {
+        // Trigger the file input click
         document.getElementById('avatar-upload').click();
+
+        // If an avatar is already selected, upload it
+        if (avatar) {
+            handleImageUpload();
+        }
     };
 
     const handleInputChange = (event, setValue) => {
@@ -81,10 +89,29 @@ const Profile = () => {
         }
     };
 
+    const handleImageUpload = async (event) => {
+        try {
+            const token = sessionStorage.getItem('token');
+            const file = event.target.files[0];
+            const formData = new FormData();
+            formData.append('image', file); // 'image' should match the fieldname used in multer.single()
+
+            const response = await axios.post('http://localhost:5000/api/upload', formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            console.log(response.data); // Log or handle the server response
+        } catch (error) {
+            console.error('Error uploading image:', error.message || error);
+        }
+    };
+
     return (
         <div className="row">
             <div className="col"></div>
-            {/* Empty column */}
             <div className="col d-flex justify-content-center">
                 <div id="profile-container" className="container">
                     <form>
@@ -97,7 +124,7 @@ const Profile = () => {
                             onClick={handleAvatarClick}
                         />
                         <div>
-                            {(!avatar || avatar === null) && (
+                            {(!avatar || false) && (
                                 <div>
                                     <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
                                         Upload Avatar
@@ -106,7 +133,7 @@ const Profile = () => {
                                         type="file"
                                         id="avatar-upload"
                                         accept="image/*"
-                                        onChange={handleUpload}
+                                        onChange={handleImageUpload}
                                         hidden
                                     />
                                 </div>
@@ -123,7 +150,7 @@ const Profile = () => {
                                         type="file"
                                         id="avatar-upload"
                                         accept="image/*"
-                                        onChange={handleUpload}
+                                        onChange={handleImageUpload}
                                         hidden
                                     />
                                 </div>
@@ -208,7 +235,6 @@ const Profile = () => {
                 </div>
             </div>
             <div className="col"></div>
-            {/* Empty column */}
         </div>
     );
 };
