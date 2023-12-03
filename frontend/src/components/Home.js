@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-
+// import './Home.css';
 // Схема для моделі поста
 // const postSchema = new mongoose.Schema({
 //     nickname: String,
@@ -15,6 +15,8 @@ const Home = () => {
     return (
         <div>
             <h2>Popular posts</h2>
+
+            {/* Display Random Posts */}
             <div className="row">
                 {randomPosts.map(post => (
                     <div key={post._id} className="col-md-4">
@@ -27,8 +29,7 @@ const Home = () => {
                 ))}
             </div>
         </div>
+
     );
-
-
-};
-            export default Home;
+}
+export default Home;

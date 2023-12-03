@@ -8,6 +8,7 @@ import Profile from './Profile';
 import Navigation from './Navigation';
 import {PageProvider, usePageContext} from './PageContext'; // Make sure to import PageProvider
 import './Main.css';
+import Search from "./Search";
 
 const Main = () => {
     return (
@@ -35,6 +36,7 @@ const Content = () => {
             {currentPage === 'signUp' && <SignUp/>}
             {currentPage === 'signIn' && <SignIn/>}
             {currentPage === 'profile' && <Profile/>}
+            {currentPage === 'search' && <Search/>}
         </>
     );
 };
