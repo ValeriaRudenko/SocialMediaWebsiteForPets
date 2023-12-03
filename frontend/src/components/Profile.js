@@ -33,16 +33,42 @@ const Profile = () => {
             setAge(userData.age);
             setBreed(userData.breed);
             setPetType(userData.pettype);
+
+            // Fetch the avatar image
+            // const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
+            //     headers: {
+            //         Authorization: `Bearer ${token}`,
+            //     }});
+            fetch('http://localhost:5000/api/avatar', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    if (blob.type.startsWith('image/jpeg') || blob.type.startsWith('image/png')) {
+                        // Check if the blob is of type JPEG or PNG
+                        const objectURL = URL.createObjectURL(blob);
+                        setAvatar(objectURL);
+                    } else {
+                        throw new Error('The response is not a JPEG or PNG image.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching image:', error);
+                });
+
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
         }
     };
 
-    const handleUpload = (event) => {
-        console.log('Uploading profile')
-        const file = event.target.files[0];
-        setAvatar(file);
-    };
+
 
     const handleAvatarClick = () => {
         // Trigger the file input click
@@ -107,6 +133,7 @@ const Profile = () => {
         } catch (error) {
             console.error('Error uploading image:', error.message || error);
         }
+        fetchProfileData();
     };
 
     return (
@@ -119,7 +146,7 @@ const Profile = () => {
                         <img
                             id="avatar-image"
                             className={avatar ? 'avatar-with-image' : ''}
-                            src={avatar ? URL.createObjectURL(avatar) : 'default-avatar.jpg'}
+                            src={avatar}
                             alt="Avatar"
                             onClick={handleAvatarClick}
                         />
