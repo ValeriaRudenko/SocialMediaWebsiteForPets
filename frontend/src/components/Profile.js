@@ -113,9 +113,9 @@ const Profile = () => {
                             )}
                             {avatar && (
                                 <div>
-                                    <button className="upload-label" id="delete-avatar" onClick={() => setAvatar(null)}>
+                                    <label className="upload-label" id="delete-avatar" onClick={() => setAvatar(null)}>
                                         Delete Avatar
-                                    </button>
+                                    </label>
                                     <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
                                         Change Avatar
                                     </label>
