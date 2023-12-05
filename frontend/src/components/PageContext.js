@@ -11,7 +11,7 @@ export const usePageContext = () => {
 };
 
 export const PageProvider = ({ children }) => {
-    const [currentPage, setCurrentPage] = useState('signUp');
+    const [currentPage, setCurrentPage] = useState('home');
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
