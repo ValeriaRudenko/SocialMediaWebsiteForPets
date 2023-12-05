@@ -4,8 +4,9 @@
     min-height: 100vh;
 }
 .logo {
-    width: 150px;
-    height: 75px;
+    margin: 20px;
+    width: 100px;
+    height: 60px;
 }
 
 /*body {*/
