@@ -21,8 +21,10 @@ const Profile = () => {
 
         // Delete the token from session storage
         sessionStorage.removeItem('token');
+        // Redirect or perform any additional actions after sign-out
+        // For example, you can navigate to the login page
+        window.location.reload();
 
-        handlePageChange('signIn');
 
     };
 

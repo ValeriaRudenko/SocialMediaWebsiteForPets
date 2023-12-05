@@ -21,6 +21,8 @@ const SignUp = () => {
             sessionStorage.setItem('token', response.data.token);
             console.log('Sign Up Successful:', response.data.message);
             setSignupMessage(response.data.message);
+            window.location.reload();
+
         } catch (error) {
             console.error('Error Signing Up:', error.response.data.message);
             setSignupMessage(error.response.data.message);

@@ -20,7 +20,8 @@ const SignIn = () => {
 
             console.log('Sign In Successful:', response.data.message);
             setSignInMessage(response.data.message);
-            handlePageChange('profile');
+            window.location.reload();
+
 
         } catch (error) {
             console.error('Error Signing In:', error.response.data.message);
