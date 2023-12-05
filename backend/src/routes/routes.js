@@ -77,7 +77,40 @@ router.get('/check-auth', (req, res) => {
         res.status(401).json({ authenticated: false, user: null });
     }
 });
+// Validate token route
+router.get('/validate-token', async (req, res) => {
+    try {
+        // Extract the token from the Authorization header
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const userId = decodedToken.userId;
+
+        // Retrieve user from the database based on the user ID
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // If the token is valid, return a success response
+        res.status(200).json({ message: 'Token is valid', user: { id: user._id, username: user.username, email: user.email } });
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        console.error('Error validating token:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 // Get user profile data route
 router.get('/profile', async (req, res) => {
     try {
