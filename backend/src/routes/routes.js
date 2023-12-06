@@ -302,4 +302,17 @@ router.get('/avatar', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+// Get all users route
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find({}, '_id username');
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error getting users:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
 module.exports = router;
