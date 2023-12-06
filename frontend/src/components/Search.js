@@ -46,7 +46,7 @@ const Search = () => {
                     <ul>
                         {filteredUsers.map(user => (
                             <div key={user._id}>
-
+                                <a href={`/user/${user._id}`} className="found">{user.username}</a>
                                 <button  type="button" className="found">{user.username}</button>
                             </div>
                         ))}
