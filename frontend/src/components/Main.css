@@ -24,8 +24,10 @@ button:hover {
 div {
     font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
 }
-.main {
-    background-color: #FFE4D6;
+
+
+
+.found{
+    width: 100px;
+    height: 50px;
 }
-
-
