@@ -26,7 +26,7 @@ const Navigation = () => {
         <header>
             <div className="row">
                 <div className="col">
-                    <img src="../logo.jpg" className="logo" alt="Logo"  />
+                    <img src="../logo.png" className="logo" alt="Logo"  />
                 </div>
                 <div className="col d-flex justify-content-center">
                     <button onClick={() => handlePageChange('home')}>Home</button>

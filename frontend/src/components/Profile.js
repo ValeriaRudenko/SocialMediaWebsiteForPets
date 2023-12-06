@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
 // ... (import statements)
+import { usePageContext } from './PageContext';
 
 const Profile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -15,6 +16,17 @@ const Profile = () => {
         // Fetch user profile data when the component mounts
         fetchProfileData();
     }, []); // Empty dependency array ensures the effect runs only once
+    const { handlePageChange } = usePageContext();
+    const handleSignOut = async () => {
+
+        // Delete the token from session storage
+        sessionStorage.removeItem('token');
+        // Redirect or perform any additional actions after sign-out
+        // For example, you can navigate to the login page
+        window.location.reload();
+
+
+    };
 
     const fetchProfileData = async () => {
         try {
@@ -256,6 +268,9 @@ const Profile = () => {
                                         Edit
                                     </button>
                                 )}
+                                <button className="button_in_cont" type="button" onClick={handleSignOut}>
+                                    Sign out
+                                </button>
                             </div>
                         </div>
                     </form>
