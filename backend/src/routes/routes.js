@@ -141,7 +141,7 @@ router.get('/profile', async (req, res) => {
             fullName: pet ? pet.name : null,
                 age: pet ? pet.age : null,
                 breed: pet ? pet.breed : null,
-                type: pet ? pet.pettype : null,
+                type: pet ? pet.type : null,
         });
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
@@ -186,7 +186,7 @@ router.post('/profile', async (req, res) => {
                 name: req.body.fullName || user.fullName,
                 age: req.body.age || null,
                 breed: req.body.breed || null,
-                type: req.body.pettype || null,
+                type: req.body.type || null,
                 owner: userId,
             });
         } else {
@@ -194,7 +194,7 @@ router.post('/profile', async (req, res) => {
             pet.name = req.body.fullName || pet.name;
             pet.age = req.body.age || pet.age;
             pet.breed = req.body.breed || pet.breed;
-            pet.type = req.body.pettype || pet.type;
+            pet.type = req.body.type || pet.type;
         }
 
         // Save/update the pet

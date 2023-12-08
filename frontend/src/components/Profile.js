@@ -7,7 +7,7 @@ const Profile = () => {
     const [fullName, setFullName] = useState('');
     const [breed, setBreed] = useState('');
     const [age, setAge] = useState('');
-    const [pettype, setPetType] = useState('');
+    const [type, setPetType] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
 
     useEffect(() => {
@@ -41,7 +41,7 @@ const Profile = () => {
             setFullName(userData.fullName);
             setAge(userData.age);
             setBreed(userData.breed);
-            setPetType(userData.pettype);
+            setPetType(userData.type);
 
             // Fetch the avatar image
             // const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
@@ -106,7 +106,7 @@ const Profile = () => {
                 fullName,
                 age,
                 breed,
-                pettype,
+                type,
             };
             // Make a POST request to the server endpoint with the token in the headers
             const response = await axios.post('http://localhost:5000/api/profile', userData, {
@@ -245,14 +245,14 @@ const Profile = () => {
                                         <label htmlFor="PetType">Pet type:</label>
                                         <input
                                             type="text"
-                                            id="pettype"
-                                            value={pettype}
+                                            id="type"
+                                            value={type}
                                             onChange={(event) => handleInputChange(event, setPetType)}
                                         />
                                     </div>
                                 ) : (
                                     <p>
-                                        <strong>Pet type:</strong> {pettype}
+                                        <strong>Pet type:</strong> {type}
                                     </p>
                                 )}
 

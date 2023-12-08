@@ -7,9 +7,9 @@ const UserProfile = () => {
     const [avatar, setAvatar] = useState(null);
     const [breed, setBreed] = useState('');
     const [age, setAge] = useState('');
-    const [pettype, setPetType] = useState('');
-    const [nickname, setNickname] = useState('User123');
-    const [posts, setPosts] = useState('');
+    const [type, setPetType] = useState('');
+    const [name, setName] = useState('User123');
+    const [posts, setPostUses] = useState('');
     const [isFollowed, setIsFollowed] = useState(false); // Assume initial state, you can set it based on your logic
 
     const handleFollowButtonClick = () => {
@@ -37,8 +37,8 @@ const UserProfile = () => {
             // Update state with the fetched data
             setAge(userData.age);
             setBreed(userData.breed);
-            setPetType(userData.pettype);
-
+            setPetType(userData.type);
+            setName(userData.fullName);
             // Fetch the avatar image
             // const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
             //     headers: {
@@ -79,9 +79,9 @@ const UserProfile = () => {
             <div className="col d-flex justify-content-center">
                 <div id="profile-container" className="container">
                     <form>
-                        {/* Display the person's nickname at the top of the container */}
-                        <div className="nickname-container">
-                            <h3>{nickname}</h3>
+                        {/* Display the person's name at the top of the container */}
+                        <div className="name-container">
+                            <h3>{name}</h3>
                         </div>
 
                         <img
@@ -106,7 +106,8 @@ const UserProfile = () => {
                                 )}
                             </div>
                             <div>
-                                <p>Pet type: {pettype}</p>
+                                <p>Name: {name}</p>
+                                <p>Pet type: {type}</p>
                                 <p>Breed: {breed}</p>
                                 <p>Age: {age}</p>
                             </div>
