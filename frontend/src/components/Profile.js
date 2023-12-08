@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
-// ... (import statements)
-import { usePageContext } from './PageContext';
 
 const Profile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -16,7 +14,6 @@ const Profile = () => {
         // Fetch user profile data when the component mounts
         fetchProfileData();
     }, []); // Empty dependency array ensures the effect runs only once
-    const { handlePageChange } = usePageContext();
     const handleSignOut = async () => {
 
         // Delete the token from session storage

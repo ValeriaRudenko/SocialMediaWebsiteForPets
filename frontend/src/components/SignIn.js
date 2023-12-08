@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Sign.css';
-import { usePageContext } from './PageContext';
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signInMessage, setSignInMessage] = useState('');
-    const { handlePageChange } = usePageContext(); // Move the hook call to the component level
 
     const handleSignIn = async () => {
         try {

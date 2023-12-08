@@ -1,5 +1,4 @@
 import React from 'react';
-import { usePageContext } from './PageContext';
 import './Navigation.css';
 
 const axios = require('axios');
