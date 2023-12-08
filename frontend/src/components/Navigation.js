@@ -21,7 +21,10 @@ async function isTokenValid() {
 }
 
 const Navigation = () => {
-    const { handlePageChange } = usePageContext();
+
+    const handlePageChange = (page) => {
+        window.location.href = `/${page}`;
+    };
     return (
         <header>
             <div className="row">
