@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import './Profile.css';
 import './Sign.css';
+import { useParams } from 'react-router-dom';
 
 const UserProfile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -11,6 +12,7 @@ const UserProfile = () => {
     const [name, setName] = useState('User123');
     const [posts, setPostUses] = useState('');
     const [isFollowed, setIsFollowed] = useState(false); // Assume initial state, you can set it based on your logic
+    const { id } = useParams();
 
     const handleFollowButtonClick = () => {
         // Toggle follow status
@@ -23,15 +25,16 @@ const UserProfile = () => {
     }, []); // Empty dependency array ensures the effect runs only once
 
     const fetchProfileData = async () => {
+
         try {
-            // Get the token from wherever you stored it (e.g., session storage)
-            const token = sessionStorage.getItem('token');
+            console.log(id);
             // Make a GET request to the server endpoint with the token in the headers
-            const response = await axios.get('http://localhost:5000/api/profile', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const response = await axios.post('http://localhost:5000/api/profilebyid', {
+                id,
             });
+            const userId = 'your_user_id';
+
+
             // Extract data from the response
             const userData = response.data;
             // Update state with the fetched data
@@ -46,7 +49,7 @@ const UserProfile = () => {
             //     }});
             fetch('http://localhost:5000/api/avatar', {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${id}`,
                 },
             })
                 .then(response => {
