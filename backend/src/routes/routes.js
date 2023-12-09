@@ -418,4 +418,45 @@ router.post('/additions', async (req, res) => {
     }
 });
 
+
+router.get('/additions', async (req, res) => {
+    try {
+        // Fetch all additions from the database
+        const allAdditions = await Addition.find();
+
+        res.status(200).json({ additions: allAdditions });
+    } catch (error) {
+        console.error('Error getting all additions:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+router.get('/posts', async (req, res) => {
+    try {
+        // Fetch all posts from the database
+        const allPosts = await Post.find();
+
+        res.status(200).json({ posts: allPosts });
+    } catch (error) {
+        console.error('Error getting all posts:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+router.get('/posts/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Fetch all posts by the specified user ID from the database
+        const userPosts = await Post.find({ author: userId });
+
+        res.status(200).json({ posts: userPosts });
+    } catch (error) {
+        console.error('Error getting posts by user ID:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
