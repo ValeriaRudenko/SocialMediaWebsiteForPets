@@ -459,4 +459,72 @@ router.get('/posts/:userId', async (req, res) => {
     }
 });
 
+
+// Post a comment route
+router.post('/comments', async (req, res) => {
+    try {
+        // Extract the token from the Authorization header
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const userId = decodedToken.userId;
+
+        // Check if the user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Extract comment data from the request body
+        const { text, postId } = req.body;
+
+        // Check if the post exists
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // Create a new comment
+        const newComment = new Comment({
+            text,
+            autor: userId,
+            post: postId,
+        });
+
+        // Save the new comment to the database
+        await newComment.save();
+
+        res.status(201).json({ message: 'Comment posted successfully', comment: newComment });
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        console.error('Error posting comment:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Get comments by post ID route
+router.get('/comments/:postId', async (req, res) => {
+    try {
+        const postId = req.params.postId;
+
+        // Fetch all comments for the specified post ID from the database
+        const postComments = await Comment.find({ post: postId });
+
+        res.status(200).json({ comments: postComments });
+    } catch (error) {
+        console.error('Error getting comments by post ID:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
