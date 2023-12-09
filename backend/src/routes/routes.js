@@ -153,7 +153,36 @@ router.get('/profile', async (req, res) => {
     }
 });
 
+// Get user profile data route
+router.post('/profilebyid', async (req, res) => {
+    const {id} = req.body;
+    console.log(id);
+    try {
+        // Retrieve user from the database based on the user ID
+        const user = await User.findById(id);
 
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the user has a pet
+        let pet = await Pet.findOne({ owner: id });
+
+        res.status(200).json({
+            fullName: pet ? pet.name : null,
+            age: pet ? pet.age : null,
+            breed: pet ? pet.breed : null,
+            type: pet ? pet.type : null,
+        });
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        console.error('Error retrieving user profile:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 // Update user profile data route
 router.post('/profile', async (req, res) => {
     try {
