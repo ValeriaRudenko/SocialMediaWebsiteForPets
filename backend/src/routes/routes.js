@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User.js');
 const Pet = require('../models/Pet.js');
+const Addition = require('../models/Addition.js');
+const Comment = require('../models/Comment.js');
+const Post = require('../models/Post.js');
+
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
@@ -343,5 +347,75 @@ router.get('/users', async (req, res) => {
     }
 });
 
+
+// Create a new post route
+router.post('/posts', async (req, res) => {
+    try {
+        // Extract the token from the Authorization header
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const userId = decodedToken.userId;
+
+        // Check if the user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Extract post data from the request body
+        const { image, label, text } = req.body;
+
+        // Create a new post
+        const newPost = new Post({
+            image,
+            label,
+            text,
+            author: userId,
+        });
+
+        // Save the new post to the database
+        await newPost.save();
+
+        res.status(201).json({ message: 'Post created successfully', post: newPost });
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        console.error('Error creating post:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+router.post('/additions', async (req, res) => {
+    try {
+        // Extract addition data from the request body
+        const { image, label, text } = req.body;
+
+        // Create a new addition
+        const newAddition = new Addition({
+            image,
+            label,
+            text,
+        });
+
+        // Save the new addition to the database
+        await newAddition.save();
+
+        res.status(201).json({ message: 'Addition created successfully', addition: newAddition });
+    } catch (error) {
+               console.error('Error creating addition:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 module.exports = router;

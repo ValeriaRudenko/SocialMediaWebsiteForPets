@@ -14,6 +14,6 @@ const commentSchema = new mongoose.Schema({
     },
 });
 
-const User = mongoose.model('Comment', commentSchema);
+const Comment = mongoose.model('Comment', commentSchema);
 
-module.exports = User;
+module.exports = Comment;
