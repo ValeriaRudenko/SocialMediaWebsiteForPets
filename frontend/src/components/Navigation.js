@@ -1,5 +1,4 @@
 import React from 'react';
-import { usePageContext } from './PageContext';
 import './Navigation.css';
 
 const axios = require('axios');
@@ -21,7 +20,10 @@ async function isTokenValid() {
 }
 
 const Navigation = () => {
-    const { handlePageChange } = usePageContext();
+
+    const handlePageChange = (page) => {
+        window.location.href = `/${page}`;
+    };
     return (
         <header>
             <div className="row">
@@ -29,7 +31,7 @@ const Navigation = () => {
                     <img src="../logo.png" className="logo" alt="Logo"  />
                 </div>
                 <div className="col d-flex justify-content-center">
-                    <button onClick={() => handlePageChange('home')}>Home</button>
+                    <button onClick={() => handlePageChange('')}>Home</button>
                     <button onClick={() => handlePageChange('subscriptions')}>Subscriptions</button>
                     <button onClick={() => handlePageChange('adds')}>Additions</button>
                     <button onClick={() => handlePageChange('search')}>Search</button>
