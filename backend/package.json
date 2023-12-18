@@ -19,7 +19,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "test": "mocha"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "mocha ./src/tests/test.js",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
