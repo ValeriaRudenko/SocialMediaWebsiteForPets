@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Backend" type="NodeJSConfigurationType" path-to-js-file="src/App.js" working-dir="$PROJECT_DIR$/backend">
+  <configuration default="false" name="Backend" type="NodeJSConfigurationType" path-to-js-file="$PROJECT_DIR$/backend/src/App.js" working-dir="$PROJECT_DIR$/backend">
     <method v="2" />
   </configuration>
 </component>
