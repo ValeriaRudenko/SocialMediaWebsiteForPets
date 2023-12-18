@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "node ./src/App.js",
-    "test": "mocha ./src/tests/test.js",
+    "test": "mocha ./src/tests/test.js"
   },
   "eslintConfig": {
     "extends": [
