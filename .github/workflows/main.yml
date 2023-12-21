@@ -57,5 +57,3 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Deploy to Production
-        # Add your deployment steps here
