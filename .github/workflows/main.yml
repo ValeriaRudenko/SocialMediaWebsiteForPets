@@ -53,9 +53,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up Node.js for Frontend
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install Frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
       - name: Build Frontend
         run: npm run build
         working-directory: ./frontend
+        
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
