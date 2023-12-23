@@ -1,0 +1,47 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  testbackend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js for Backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install Backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Run Backend tests
+        run: npm test
+        working-directory: ./backend
+
+  testfrontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js for Frontend
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install Frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Run Frontend tests
+        run: npm test a
+        working-directory: ./frontend
