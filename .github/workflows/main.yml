@@ -12,5 +12,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-    # Extend the build job from a separate file
-    - <<: *build_job_definition
+      # Use the anchor for the build job
+      - <<: *build_job_definition
+
+# Define the build job as an anchor
+.build_job_definition: &build_job_definition
+  name: Build
+  run: echo "Replace this with your actual build steps"
