@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import Search from './Search';
+import Search from '../components/Search';
 
 test('renders search page with input field', () => {
     render(<Search />);
