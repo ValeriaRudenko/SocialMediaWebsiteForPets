@@ -1,17 +1,11 @@
-name: Build
+# Define the build job as an anchor
+.build_job_definition: &build_job_definition
+  name: Build
+  runs-on: ubuntu-latest
+  
+  steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Build
-        run: echo "Deploying to production"
+    - name: Build
+      run: echo "Deploying to production"
