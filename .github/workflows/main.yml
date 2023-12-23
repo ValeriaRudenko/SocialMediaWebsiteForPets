@@ -1,0 +1,13 @@
+name: Main Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    !include .github/workflows/jobs/build.yml
+
+  test:
+    !include .github/workflows/jobs/test.yml
