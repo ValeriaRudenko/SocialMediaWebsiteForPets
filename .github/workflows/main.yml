@@ -1,4 +1,4 @@
-name: Main Workflow
+name: CI/CD
 
 on:
   push:
@@ -7,7 +7,10 @@ on:
 
 jobs:
   build:
-    !include .github/workflows/jobs/build.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-  test:
-    !include .github/workflows/jobs/test.yml
+    # Extend the build job from a separate file
+    - <<: *build_job_definition
