@@ -10,6 +10,7 @@ import NewPost from './components/Newpost';
 import Search from "./components/Search";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import UserProfile from "./components/UserProfile";
+import AddAddition from "./components/NewAddition";
 
 const App = () => {
     return (
@@ -35,6 +36,7 @@ const Content = () => {
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/search" element={<Search/>}/>
                     <Route path="/newpost" element={<NewPost/>}/>
+                    <Route path="/addaddition" element={<AddAddition/>}/>
                     <Route path="/user/:id" element={<UserProfile/>}/>
                 </Routes>
             </Router>
