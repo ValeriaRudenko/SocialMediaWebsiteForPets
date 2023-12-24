@@ -371,11 +371,10 @@ router.post('/posts', async (req, res) => {
         }
 
         // Extract post data from the request body
-        const { image, label, text } = req.body;
-
+        const { label, text } = req.body;
+        console.log(userId);
         // Create a new post
         const newPost = new Post({
-            image,
             label,
             text,
             author: userId,

@@ -6,6 +6,7 @@ import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import Profile from './components/Profile';
 import Navigation from './components/Navigation';
+import NewPost from './components/Newpost';
 import Search from "./components/Search";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import UserProfile from "./components/UserProfile";
@@ -33,7 +34,7 @@ const Content = () => {
                     <Route path="/signIn" element={<SignIn/>}/>
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/search" element={<Search/>}/>
-
+                    <Route path="/newpost" element={<NewPost/>}/>
                     <Route path="/user/:id" element={<UserProfile/>}/>
                 </Routes>
             </Router>
