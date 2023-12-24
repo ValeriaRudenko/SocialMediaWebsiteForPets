@@ -1,11 +1,4 @@
-import React, {useEffect, useState} from 'react';
-// import './Home.css';
-// Схема для моделі поста
-// const postSchema = new mongoose.Schema({
-//     nickname: String,
-//     caption: String,
-//     imagePath: String,
-// });
+import React, {useState} from 'react';
 
 const Home = () => {
     const [randomPosts, setRandomPosts] = useState([]);
