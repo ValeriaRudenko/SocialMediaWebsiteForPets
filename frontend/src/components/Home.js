@@ -4,6 +4,7 @@ import axios from 'axios';
 const Home = () => {
     const [popularPosts, setPopularPosts] = useState([]);
     const [comments, setComments] = useState({}); // Store comments for each post using post ID as keys
+    const [commentInputs, setCommentInputs] = useState({}); // Separate comment input state for each post
 
     useEffect(() => {
         // Fetch popular posts when the component mounts
@@ -18,8 +19,6 @@ const Home = () => {
 
         fetchPopularPosts();
     }, []);
-
-    const [commentInputs, setCommentInputs] = useState({}); // Separate comment input state for each post
 
     const handleSendComment = async (postId) => {
         try {
@@ -54,7 +53,6 @@ const Home = () => {
 
             // Fetch updated comments for the specific post
             fetchCommentsForPost(postId);
-
         } catch (error) {
             console.error('Error sending comment:', error.response ? error.response.data.message : error.message);
         }
@@ -77,7 +75,31 @@ const Home = () => {
         }
     };
 
-    // Fetch comments for each post when the component mounts
+    const renderCommentInput = (post) => {
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            // If no valid token, return null (comment input will not be rendered)
+            return null;
+        }
+
+        return (
+            <div className="card-footer">
+                <input
+                    type="text"
+                    className="form-control mb-2"
+                    value={commentInputs[post._id] || ''}
+                    onChange={(e) => handleCommentChange(post._id, e)}
+                    placeholder="Type your comment"
+                />
+                {/* Button to send comments */}
+                <button className="btn btn-primary" onClick={() => handleSendComment(post._id)}>
+                    Send Comment
+                </button>
+            </div>
+        );
+    };
+
     useEffect(() => {
         popularPosts.forEach((post) => {
             fetchCommentsForPost(post._id);
@@ -105,25 +127,13 @@ const Home = () => {
                                 {comments[post._id] &&
                                     comments[post._id].map((comment) => (
                                         <div key={comment._id} className="mb-2">
-                                            <p className="mb-0">{comment.text}</p>
+                                            <strong>{comment.autor.username}:</strong><p className="mb-0">{comment.text}</p>
                                         </div>
                                     ))}
                             </div>
 
-                            {/* Input field for comments */}
-                            <div className="card-footer">
-                                <input
-                                    type="text"
-                                    className="form-control mb-2"
-                                    value={commentInputs[post._id] || ''}
-                                    onChange={(e) => handleCommentChange(post._id, e)}
-                                    placeholder="Type your comment"
-                                />
-                                {/* Button to send comments */}
-                                <button className="btn btn-primary" onClick={() => handleSendComment(post._id)}>
-                                    Send Comment
-                                </button>
-                            </div>
+                            {/* Render comment input only if token is valid */}
+                            {renderCommentInput(post)}
                         </div>
                     </div>
                 ))}

@@ -517,7 +517,7 @@ router.get('/comments/:postId', async (req, res) => {
         const postId = req.params.postId;
 
         // Fetch all comments for the specified post ID from the database
-        const postComments = await Comment.find({ post: postId });
+        const postComments = await Comment.find({ post: postId }).populate('autor', 'username');
 
         res.status(200).json({ comments: postComments });
     } catch (error) {
