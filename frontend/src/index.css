@@ -44,3 +44,40 @@ div {
 }
 
 
+/* Add styles based on your design preferences */
+
+.container {
+  margin-top: 20px;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: box-shadow 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  color: #555;
+}
+
+.text-muted {
+  font-size: 0.8rem;
+}
+
+.card-footer {
+  margin-top: 10px;
+}

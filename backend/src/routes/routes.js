@@ -371,11 +371,10 @@ router.post('/posts', async (req, res) => {
         }
 
         // Extract post data from the request body
-        const { image, label, text } = req.body;
-
+        const { label, text } = req.body;
+        console.log(userId);
         // Create a new post
         const newPost = new Post({
-            image,
             label,
             text,
             author: userId,
@@ -434,8 +433,8 @@ router.get('/additions', async (req, res) => {
 
 router.get('/posts', async (req, res) => {
     try {
-        // Fetch all posts from the database
-        const allPosts = await Post.find();
+        // Fetch all posts from the database and populate the author field with username
+        const allPosts = await Post.find().populate('author', 'username');
 
         res.status(200).json({ posts: allPosts });
     } catch (error) {
@@ -518,7 +517,7 @@ router.get('/comments/:postId', async (req, res) => {
         const postId = req.params.postId;
 
         // Fetch all comments for the specified post ID from the database
-        const postComments = await Comment.find({ post: postId });
+        const postComments = await Comment.find({ post: postId }).populate('autor', 'username');
 
         res.status(200).json({ comments: postComments });
     } catch (error) {

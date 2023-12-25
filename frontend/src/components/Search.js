@@ -21,7 +21,9 @@ const Search = () => {
     const handleSearch = (event) => {
         setSearch(event.target.value);
     };
-
+    const handlePageChange = (page) => {
+        window.location.href = `/${page}`;
+    };
     const filteredUsers = users.filter(user => {
         const similarity = user.username.toLowerCase().includes(search.toLowerCase());
         return similarity;
@@ -46,8 +48,7 @@ const Search = () => {
                     <ul>
                         {filteredUsers.map(user => (
                             <div key={user._id}>
-                                <a href={`/user/${user._id}`} className="found">{user.username}</a>
-                                <button  type="button" className="found">{user.username}</button>
+                                <button  onClick={() => handlePageChange('user/'+user._id)} type="button" className="found">{user.username}</button>
                             </div>
                         ))}
                     </ul>
