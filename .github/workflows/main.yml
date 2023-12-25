@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  testbackend:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,9 +16,7 @@ jobs:
       - name: Set up Node.js for Backend
         uses: actions/setup-node@v2
         with:
-          node-version: 14
-        run:
-        working-directory: ./backend
+          node-version: 20
 
       - name: Install Backend dependencies
         run: npm install
@@ -28,12 +26,17 @@ jobs:
         run: npm test
         working-directory: ./backend
 
+  testfrontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Set up Node.js for Frontend
         uses: actions/setup-node@v2
         with:
-          node-version: 14
-        run:
-        working-directory: ./frontend
+          node-version: 20
 
       - name: Install Frontend dependencies
         run: npm install
@@ -42,3 +45,25 @@ jobs:
       - name: Run Frontend tests
         run: npm test
         working-directory: ./frontend
+
+      - name: Build Frontend
+        run: npm run build
+        working-directory: ./frontend
+#      - name: Upload coverage reports to Codecov
+#        uses: codecov/codecov-action@v3
+#        env:
+#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: testfrontend
+    defaults:
+      run:
+        working-directory: ./backend   # Set the default working directory for the entire job
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Production
+        # Add your deployment steps here
+        run: echo "Deploying to production"

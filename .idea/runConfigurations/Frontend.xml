@@ -1,5 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Frontend" type="NodeJSConfigurationType" node-parameters="start" working-dir="$PROJECT_DIR$/frontend">
-    <method v="2" />
-  </configuration>
-</component>

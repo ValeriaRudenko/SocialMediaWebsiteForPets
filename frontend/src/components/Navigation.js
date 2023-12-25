@@ -35,6 +35,7 @@ const Navigation = () => {
                     <button onClick={() => handlePageChange('subscriptions')}>Subscriptions</button>
                     <button onClick={() => handlePageChange('adds')}>Additions</button>
                     <button onClick={() => handlePageChange('search')}>Search</button>
+                    <button onClick={() => handlePageChange('newpost')}>New post</button>
                 </div>
                 <div className="col d-flex justify-content-end">
 
