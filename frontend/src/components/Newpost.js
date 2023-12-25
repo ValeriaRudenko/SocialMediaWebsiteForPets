@@ -16,10 +16,10 @@ const NewPost = () => {
                 return;
             }
 
-            const formData = {
-                label,
-                text
-            };
+            const formData = new FormData();
+            formData.append('image', image);
+            formData.append('label', label);
+            formData.append('text', text);
 
             const response = await axios.post('http://localhost:5000/api/posts', formData, {
                 headers: {
