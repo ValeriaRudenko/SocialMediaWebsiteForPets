@@ -414,11 +414,8 @@ router.post('/posts', postImageUpload.single('image'), handleFileTooLarge, async
         }
 
         // Extract post data from the request body
-<<<<<<< Updated upstream
         const { image, label, text } = req.body;
-=======
-        const { label, text } = req.body;
->>>>>>> Stashed changes
+
 
         // Create a new post
         const newPost = new Post({

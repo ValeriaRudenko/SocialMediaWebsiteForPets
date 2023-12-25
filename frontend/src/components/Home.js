@@ -1,40 +1,119 @@
-import React, {useEffect, useState} from 'react';
-// import './Home.css';
-// Схема для моделі поста
-// const postSchema = new mongoose.Schema({
-//     nickname: String,
-//     caption: String,
-//     imagePath: String,
-// });
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Home = () => {
-    const [randomPosts, setRandomPosts] = useState([]);
+    const [popularPosts, setPopularPosts] = useState([]);
+    const [comments, setComments] = useState({}); // Store comments for each post using post ID as keys
+    const [commentInputs, setCommentInputs] = useState({}); // Separate comment input state for each post
 
+    useEffect(() => {
+        // Fetch popular posts when the component mounts
+        const fetchPopularPosts = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/posts');
+                setPopularPosts(response.data.posts);
+            } catch (error) {
+                console.error('Error fetching popular posts:', error.message || error);
+            }
+        };
+
+        fetchPopularPosts();
+    }, []);
+
+    const handleSendComment = async (postId) => {
+        try {
+            const token = sessionStorage.getItem('token');
+
+            if (!token) {
+                setCommentInputs({}); // Clear all comment input fields
+                console.error('User not authenticated. Please sign in.');
+                return;
+            }
+
+            const response = await axios.post(
+                'http://localhost:5000/api/comments',
+                {
+                    text: commentInputs[postId] || '', // Get the comment from the correct input field
+                    postId: postId,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log('Comment sent successfully:', response.data.message);
+
+            // Clear the input field after sending comment
+            setCommentInputs((prevInputs) => ({
+                ...prevInputs,
+                [postId]: '',
+            }));
+
+            // Fetch updated comments for the specific post
+            fetchCommentsForPost(postId);
+        } catch (error) {
+            console.error('Error sending comment:', error.response ? error.response.data.message : error.message);
+        }
+    };
+
+    const handleCommentChange = (postId, e) => {
+        const newCommentInputs = { ...commentInputs, [postId]: e.target.value };
+        setCommentInputs(newCommentInputs);
+    };
+
+    const fetchCommentsForPost = async (postId) => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/comments/${postId}`);
+            setComments((prevComments) => ({
+                ...prevComments,
+                [postId]: response.data.comments,
+            }));
+        } catch (error) {
+            console.error(`Error fetching comments for post ${postId}:`, error.message || error);
+        }
+    };
+
+    const renderCommentInput = (post) => {
+        const token = sessionStorage.getItem('token');
+
+        if (!token) {
+            // If no valid token, return null (comment input will not be rendered)
+            return null;
+        }
+
+        return (
+            <div className="card-footer">
+                <input
+                    type="text"
+                    className="form-control mb-2"
+                    value={commentInputs[post._id] || ''}
+                    onChange={(e) => handleCommentChange(post._id, e)}
+                    placeholder="Type your comment"
+                />
+                {/* Button to send comments */}
+                <button className="btn btn-primary" onClick={() => handleSendComment(post._id)}>
+                    Send Comment
+                </button>
+            </div>
+        );
+    };
+
+    useEffect(() => {
+        popularPosts.forEach((post) => {
+            fetchCommentsForPost(post._id);
+        });
+    }, [popularPosts]);
 
     return (
-        <div>
-            <h2>Popular posts</h2>
-
-            {/* Display Random Posts */}
+        <div className="container text-center mt-5">
+            <h2 className="mb-4">Popular Posts</h2>
             <div className="row">
-<<<<<<< Updated upstream
-                {randomPosts.map(post => (
-                    <div key={post._id} className="col-md-4">
-                        <div className="container">
-                            <img src={post.imagePath} alt="Post"/>
-                            <p>{post.nickname}</p>
-                            <p>{post.caption}</p>
-=======
                 {popularPosts.map((post) => (
                     <div key={post._id} className="col-lg-4 col-md-6 mb-4">
                         <div className="card p-3" style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-                            <img
-                                className="card-img-top"
-                                src={`data:image/jpeg;base64,${post.imageData}`} // Assuming post.imageData is base64 image data
-                                alt="Post"
-                                style={{ maxHeight: '200px', objectFit: 'cover' }}
-                            />
+                            <img className="card-img-top" src={`http://localhost:5000/api/posts/${post._id}/image`} alt="Post" style={{ maxHeight: '200px', objectFit: 'cover' }} />
                             <div className="card-body">
                                 <h5 className="card-title mb-3">{post.label}</h5>
                                 <p className="card-text mb-2">{post.text}</p>
@@ -52,13 +131,12 @@ const Home = () => {
                                     ))}
                             </div>
                             {renderCommentInput(post)}
->>>>>>> Stashed changes
                         </div>
                     </div>
                 ))}
             </div>
         </div>
-
     );
-}
+};
+
 export default Home;
