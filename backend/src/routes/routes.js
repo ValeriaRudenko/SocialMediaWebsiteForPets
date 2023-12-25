@@ -9,6 +9,7 @@ const Post = require('../models/Post.js');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs').promises;
 
 // Create a middleware function for generating JWT tokens
 function generateToken(user) {
@@ -256,7 +257,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2 MB
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 2 MB
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
@@ -348,9 +349,51 @@ router.get('/users', async (req, res) => {
 });
 
 
-// Create a new post route
-router.post('/posts', async (req, res) => {
+// File upload configuration for post images
+const postImageStorage = multer.diskStorage({
+    destination: './public/images/posts',
+    filename: (req, file, cb) => {
+        const originalExtension = path.extname(file.originalname);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const fileName = 'post-' + uniqueSuffix + originalExtension;
+        cb(null, fileName);
+    },
+});
+
+const postImageUpload = multer({
+    storage: multer.diskStorage({
+        destination: './public/images/posts/',
+        filename: (req, file, cb) => {
+            const originalExtension = require('path').extname(file.originalname);
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            const fileName = file.fieldname + '-' + uniqueSuffix + originalExtension;
+            cb(null, fileName);
+        },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5 MB
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed.'));
+        }
+    },
+});
+
+const handleFileTooLarge = (err, req, res, next) => {
+    if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'File size is too large. Maximum allowed size is 5 MB.' });
+    }
+    next(err);
+};
+
+router.post('/posts', postImageUpload.single('image'), handleFileTooLarge, async (req, res) => {
     try {
+        // Check if the image upload was successful
+        if (!req.file) {
+            return res.status(400).json({ message: 'No image file provided' });
+        }
+
         // Extract the token from the Authorization header
         const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
@@ -371,7 +414,11 @@ router.post('/posts', async (req, res) => {
         }
 
         // Extract post data from the request body
+<<<<<<< Updated upstream
         const { image, label, text } = req.body;
+=======
+        const { label, text } = req.body;
+>>>>>>> Stashed changes
 
         // Create a new post
         const newPost = new Post({
@@ -379,6 +426,7 @@ router.post('/posts', async (req, res) => {
             label,
             text,
             author: userId,
+            image: '/images/posts/' + req.file.filename,
         });
 
         // Save the new post to the database
@@ -394,6 +442,7 @@ router.post('/posts', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 
 router.post('/additions', async (req, res) => {
@@ -437,7 +486,32 @@ router.get('/posts', async (req, res) => {
         // Fetch all posts from the database
         const allPosts = await Post.find();
 
-        res.status(200).json({ posts: allPosts });
+        // Map the posts to include image URLs
+        const postsWithImages = await Promise.all(
+            allPosts.map(async (post) => {
+                const imageUrl = post.image ? post.image : null;
+
+                // Read the image file asynchronously
+                let imageData;
+                try {
+                    imageData = await fs.readFile(path.join(__dirname, '../../public', imageUrl), 'base64');
+                } catch (readError) {
+                    console.error('Error reading image file:', readError.message || readError);
+                    imageData = null;
+                }
+
+                return {
+                    _id: post._id,
+                    label: post.label,
+                    text: post.text,
+                    author: post.author,
+                    imageUrl,
+                    imageData,
+                };
+            })
+        );
+
+        res.status(200).json({ posts: postsWithImages });
     } catch (error) {
         console.error('Error getting all posts:', error.message || error);
         res.status(500).json({ message: 'Internal server error' });
@@ -452,7 +526,32 @@ router.get('/posts/:userId', async (req, res) => {
         // Fetch all posts by the specified user ID from the database
         const userPosts = await Post.find({ author: userId });
 
-        res.status(200).json({ posts: userPosts });
+        // Map the posts to include image URLs and image data
+        const postsWithImages = await Promise.all(
+            userPosts.map(async (post) => {
+                const imageUrl = post.image ? post.image : null;
+
+                // Read the image file asynchronously
+                let imageData;
+                try {
+                    imageData = await fs.readFile(path.join(__dirname, '../../public', imageUrl), 'base64');
+                } catch (readError) {
+                    console.error('Error reading image file:', readError.message || readError);
+                    imageData = null;
+                }
+
+                return {
+                    _id: post._id,
+                    label: post.label,
+                    text: post.text,
+                    author: post.author,
+                    imageUrl,
+                    imageData,
+                };
+            })
+        );
+
+        res.status(200).json({ posts: postsWithImages });
     } catch (error) {
         console.error('Error getting posts by user ID:', error.message || error);
         res.status(500).json({ message: 'Internal server error' });

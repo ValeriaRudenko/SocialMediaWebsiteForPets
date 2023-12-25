@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
 import './Sign.css';
@@ -10,69 +10,55 @@ const UserProfile = () => {
     const [age, setAge] = useState('');
     const [type, setPetType] = useState('');
     const [name, setName] = useState('User123');
-    const [posts, setPostUses] = useState('');
-    const [isFollowed, setIsFollowed] = useState(false); // Assume initial state, you can set it based on your logic
+    const [posts, setPosts] = useState([]);
+    const [isFollowed, setIsFollowed] = useState(false);
     const { id } = useParams();
 
     const handleFollowButtonClick = () => {
-        // Toggle follow status
         setIsFollowed(!isFollowed);
     };
 
     useEffect(() => {
-        // Fetch user profile data when the component mounts
         fetchProfileData();
-    }, []); // Empty dependency array ensures the effect runs only once
+        fetchUserPosts();
+    }, [id]); // Fetch data when the user ID changes
 
     const fetchProfileData = async () => {
-
         try {
-            console.log(id);
-            // Make a GET request to the server endpoint with the token in the headers
             const response = await axios.post('http://localhost:5000/api/profilebyid', {
                 id,
             });
-            const userId = 'your_user_id';
 
-
-            // Extract data from the response
             const userData = response.data;
-            // Update state with the fetched data
             setAge(userData.age);
             setBreed(userData.breed);
             setPetType(userData.type);
             setName(userData.fullName);
+
             // Fetch the avatar image
-            // const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
-            //     headers: {
-            //         Authorization: `Bearer ${token}`,
-            //     }});
-            fetch('http://localhost:5000/api/avatar', {
+            const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
                 headers: {
                     Authorization: `Bearer ${id}`,
                 },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    if (blob.type.startsWith('image/jpeg') || blob.type.startsWith('image/png')) {
-                        // Check if the blob is of type JPEG or PNG
-                        const objectURL = URL.createObjectURL(blob);
-                        setAvatar(objectURL);
-                    } else {
-                        throw new Error('The response is not a JPEG or PNG image.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching image:', error);
-                });
+            });
 
+            // Process the image response and set the avatar state
+            const avatarBlob = await avatarResponse.data.blob();
+            if (avatarBlob.type.startsWith('image/jpeg') || avatarBlob.type.startsWith('image/png')) {
+                const objectURL = URL.createObjectURL(avatarBlob);
+                setAvatar(objectURL);
+            }
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
+        }
+    };
+
+    const fetchUserPosts = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/posts/${id}`);
+            setPosts(response.data.posts);
+        } catch (error) {
+            console.error('Error fetching user posts:', error.message || error);
         }
     };
 
@@ -82,11 +68,9 @@ const UserProfile = () => {
             <div className="col d-flex justify-content-center">
                 <div id="profile-container" className="container">
                     <form>
-                        {/* Display the person's name at the top of the container */}
                         <div className="name-container">
                             <h3>{name}</h3>
                         </div>
-
                         <img
                             id="avatar-image"
                             className={avatar ? 'avatar-with-image' : ''}
@@ -95,7 +79,6 @@ const UserProfile = () => {
                         />
                         <div>
                             <div>
-                                {/* Conditionally render "Follow" or "Unfollow" button */}
                                 {isFollowed ? (
                                     <label className="upload-label" id="upload-label" htmlFor="unfollow-label"
                                            onClick={handleFollowButtonClick}>
@@ -114,13 +97,24 @@ const UserProfile = () => {
                                 <p>Breed: {breed}</p>
                                 <p>Age: {age}</p>
                             </div>
-
-                            {/* Additional profile details can be added here */}
-
                         </div>
                     </form>
                     <div className="posts-container">
                         <h4>Posts:</h4>
+                        {posts.map((post) => (
+                            <div key={post._id} className="user-post">
+                                <img
+                                    className="card-img-top"
+                                    src={`data:image/jpeg;base64,${post.imageData}`} // Assuming post.imageData is base64 image data
+                                    alt="Post"
+                                    style={{ maxHeight: '200px', objectFit: 'cover' }}
+                                />
+                                <div>
+                                    <p>Label: {post.label}</p>
+                                    <p>Text: {post.text}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
