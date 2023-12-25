@@ -21,9 +21,11 @@ const Additions = () => {
     }, []);
 
     return (
-        <div>
-            <h2>All Additions</h2>
-            <button onClick={() => handlePageChange('addaddition')}>New addition</button>
+        <div className="container">
+            <h2 className="text-center mb-4">All Additions</h2>
+            <button className="btn btn-primary mb-3" onClick={() => handlePageChange('addaddition')}>
+                New addition
+            </button>
 
             <div className="row">
                 <div className="col"></div>
@@ -31,10 +33,14 @@ const Additions = () => {
                     <div className="container">
                         {/* Display All Additions */}
                         {allAdditions.map((addition) => (
-                            <div key={addition._id} className="col">
-                                <img src={addition.image} alt="Addition" />
-                                <p>{addition.label}</p>
-                                <p>{addition.text}</p>
+                            <div key={addition._id} className="col-lg-4 mb-4">
+                                <div className="card">
+                                    <img className="card-img-top" src={addition.image} alt="Addition" />
+                                    <div className="card-body">
+                                        <h5 className="card-title">{addition.label}</h5>
+                                        <p className="card-text">{addition.text}</p>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>

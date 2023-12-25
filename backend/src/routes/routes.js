@@ -433,8 +433,8 @@ router.get('/additions', async (req, res) => {
 
 router.get('/posts', async (req, res) => {
     try {
-        // Fetch all posts from the database
-        const allPosts = await Post.find();
+        // Fetch all posts from the database and populate the author field with username
+        const allPosts = await Post.find().populate('author', 'username');
 
         res.status(200).json({ posts: allPosts });
     } catch (error) {

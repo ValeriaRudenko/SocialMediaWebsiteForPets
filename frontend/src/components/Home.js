@@ -115,7 +115,8 @@ const Home = () => {
                         <div className="card">
                             <img className="card-img-top" src={`http://localhost:5000/api/posts/${post._id}/image`} alt="Post" />
                             <div className="card-body">
-                                <h5 className="card-title">{post.label}</h5>
+
+                                <h5 className="card-title">{post.author.username}</h5><h5 className="card-title">{post.label}</h5>
                                 <p className="card-text">{post.text}</p>
                                 <p className="card-text">
                                     <small className="text-muted">{post.author.username}</small>
