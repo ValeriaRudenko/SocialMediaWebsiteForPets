@@ -137,7 +137,7 @@ async function generateData() {
         }
 
         // Generate additions
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 15; i++) {
             image = faker.image.url();
             const uniqueSuffix = 'posts/'+Date.now() + '-' + Math.round(Math.random() * 1E9)+'.jpg';
             downloadImage(image,uniqueSuffix);
