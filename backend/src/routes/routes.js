@@ -804,6 +804,62 @@ router.post('/unsubscribe', async (req, res) => {
     }
 });
 
+router.get('/subscriptionposts', async (req, res) => {
+    try {
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        const userId = decodedToken.userId;
+
+        // Fetch all subscriptions for the current user
+        const subscriptions = await Subscription.find({ subscriber: userId });
+
+        // Extract the user IDs of subscribed users
+        const subscribedUserIds = subscriptions.map(subscription => subscription.subscribed);
+
+        // Fetch all posts from subscribed users
+        const postsFromSubscribedUsers = await Post.find({ author: { $in: subscribedUserIds } });
+
+        // Map the posts to include image URLs and image data
+        const postsWithImages = await Promise.all(
+            postsFromSubscribedUsers.map(async (post) => {
+                const imageUrl = post.image ? post.image : null;
+
+                // Read the image file asynchronously
+                let imageData;
+                try {
+                    imageData = await fs.readFile(path.join(__dirname, '../../public', imageUrl), 'base64');
+                } catch (readError) {
+                    console.error('Error reading image file:', readError.message || readError);
+                    imageData = null;
+                }
+
+                return {
+                    _id: post._id,
+                    label: post.label,
+                    text: post.text,
+                    author: post.author,
+                    imageUrl,
+                    imageData,
+                };
+            })
+        );
+
+        res.status(200).json({ posts: postsWithImages });
+    } catch (error) {
+        console.error('Error getting posts from subscribed users:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+
 module.exports = router;
 
 module.exports = router;
