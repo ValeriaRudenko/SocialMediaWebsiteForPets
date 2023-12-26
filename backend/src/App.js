@@ -6,8 +6,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
-const routes = require('./routes/routes.js'); // Import the routes module
-//const User = require('./models/User.js');
+const userRoutes = require('./routes/userRoutes.js'); // Import the routes module
+const authRouter = require('./routes/authRouter');
+const profileRouter = require('./routes/profileRouter');
+const fileUploadRouter = require('./routes/fileUploadRouter');
+const postRouter = require('./routes/postRouter');
+const additionRouter = require('./routes/additionRouter');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -34,7 +38,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mern_stac
 });
 
 // Use the routes defined in the routes module
-app.use('/api', routes);
+app.use('/api', userRoutes);
+app.use('/api', authRouter);
+app.use('/api', profileRouter);
+app.use('/api', fileUploadRouter);
+app.use('/api', postRouter);
+app.use('/api', additionRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
