@@ -14,14 +14,55 @@ const UserProfile = () => {
     const [isFollowed, setIsFollowed] = useState(false);
     const { id } = useParams();
 
-    const handleFollowButtonClick = () => {
-        setIsFollowed(!isFollowed);
+    const handleFollowButtonClick = async () => {
+        try {
+            const token = sessionStorage.getItem('token');
+            // Make a POST request to the server endpoint with the token in the headers
+            const response = await axios.post('http://localhost:5000/api/subscribe', {
+                subscribedUserId: id,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 201) {
+                setIsFollowed(true);
+            } else {
+                console.error('Failed to follow user:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error following user:', error.message || error);
+        }
+    };
+
+    const handleUnfollowButtonClick = async () => {
+        try {
+            const token = sessionStorage.getItem('token');
+            // Make a POST request to the server endpoint with the token in the headers
+            const response = await axios.post('http://localhost:5000/api/unsubscribe', {
+                subscribedUserId: id,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 200) {
+                setIsFollowed(false);
+            } else {
+                console.error('Failed to unfollow user:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error unfollowing user:', error.message || error);
+        }
     };
 
     useEffect(() => {
         fetchProfileData();
         fetchUserPosts();
-    }, [id]); // Fetch data when the user ID changes
+        checkSubscriptionStatus();
+    }, [id]);
 
     const fetchProfileData = async () => {
         try {
@@ -35,14 +76,12 @@ const UserProfile = () => {
             setPetType(userData.type);
             setName(userData.fullName);
 
-            // Fetch the avatar image
             const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
                 headers: {
                     Authorization: `Bearer ${id}`,
                 },
             });
 
-            // Process the image response and set the avatar state
             const avatarBlob = await avatarResponse.data.blob();
             if (avatarBlob.type.startsWith('image/jpeg') || avatarBlob.type.startsWith('image/png')) {
                 const objectURL = URL.createObjectURL(avatarBlob);
@@ -59,6 +98,24 @@ const UserProfile = () => {
             setPosts(response.data.posts);
         } catch (error) {
             console.error('Error fetching user posts:', error.message || error);
+        }
+    };
+
+    const checkSubscriptionStatus = async () => {
+        try {
+            const token = sessionStorage.getItem('token');
+            // Make a POST request to the server endpoint with the token in the headers
+            const response = await axios.post('http://localhost:5000/api/checksubscription', {
+                subscribedUserId: id,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setIsFollowed(response.data.isSubscribed);
+        } catch (error) {
+            console.error('Error checking subscription status:', error.message || error);
         }
     };
 
@@ -80,15 +137,13 @@ const UserProfile = () => {
                         <div>
                             <div>
                                 {isFollowed ? (
-                                    <label className="upload-label" id="upload-label" htmlFor="unfollow-label"
-                                           onClick={handleFollowButtonClick}>
+                                    <button onClick={handleUnfollowButtonClick}>
                                         Unfollow
-                                    </label>
+                                    </button>
                                 ) : (
-                                    <label className="upload-label" id="upload-label" htmlFor="follow-label"
-                                           onClick={handleFollowButtonClick}>
+                                    <button onClick={handleFollowButtonClick}>
                                         Follow
-                                    </label>
+                                    </button>
                                 )}
                             </div>
                             <div>
@@ -105,7 +160,7 @@ const UserProfile = () => {
                             <div key={post._id} className="user-post">
                                 <img
                                     className="card-img-top"
-                                    src={`data:image/jpeg;base64,${post.imageData}`} // Assuming post.imageData is base64 image data
+                                    src={`data:image/jpeg;base64,${post.imageData}`}
                                     alt="Post"
                                     style={{ maxHeight: '200px', objectFit: 'cover' }}
                                 />

@@ -5,6 +5,7 @@ const Pet = require('../models/Pet.js');
 const Addition = require('../models/Addition.js');
 const Comment = require('../models/Comment.js');
 const Post = require('../models/Post.js');
+const Subscription = require('../models/Subscription.js');
 
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
@@ -670,5 +671,139 @@ router.get('/comments/:postId', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+router.post('/subscribe', async (req, res) => {
+    try {
+        const { subscribedUserId } = req.body;
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const subscriberUserId = decodedToken.userId;
+        // Check if the subscriber and subscribed users exist
+        const [subscriber, subscribed] = await Promise.all([
+            User.findById(subscriberUserId),
+            User.findById(subscribedUserId),
+        ]);
+
+        if (!subscriber || !subscribed) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the subscription already exists
+        const existingSubscription = await Subscription.findOne({
+            subscriber: subscriberUserId,
+            subscribed: subscribedUserId,
+        });
+
+        if (existingSubscription) {
+            return res.status(400).json({ message: 'Subscription already exists' });
+        }
+
+        // Create a new subscription
+        const newSubscription = new Subscription({
+            subscriber: subscriberUserId,
+            subscribed: subscribedUserId,
+        });
+
+        // Save the new subscription to the database
+        await newSubscription.save();
+
+        res.status(201).json({ message: 'Subscription created successfully' });
+    } catch (error) {
+        console.error('Error creating subscription:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+// Add this to your existing router file
+
+router.post('/checksubscription', async (req, res) => {
+    try {
+        const { subscribedUserId } = req.body;
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const subscriberUserId = decodedToken.userId;
+        // Check if the subscriber and subscribed users exist
+        const [subscriber, subscribed] = await Promise.all([
+            User.findById(subscriberUserId),
+            User.findById(subscribedUserId),
+        ]);
+
+        if (!subscriber || !subscribed) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the subscription exists
+        const existingSubscription = await Subscription.findOne({
+            subscriber: subscriberUserId,
+            subscribed: subscribedUserId,
+        });
+
+        res.status(200).json({ isSubscribed: !!existingSubscription });
+    } catch (error) {
+        console.error('Error checking subscription:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+
+router.post('/unsubscribe', async (req, res) => {
+    try {
+        const { subscribedUserId } = req.body;
+        const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verify the token
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY || 'defaultSecretKey');
+
+        // Use the decoded token to get user ID
+        const subscriberUserId = decodedToken.userId;
+        // Check if the subscriber and subscribed users exist
+        const [subscriber, subscribed] = await Promise.all([
+            User.findById(subscriberUserId),
+            User.findById(subscribedUserId),
+        ]);
+
+        if (!subscriber || !subscribed) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the subscription exists
+        const existingSubscription = await Subscription.findOneAndDelete({
+            subscriber: subscriberUserId,
+            subscribed: subscribedUserId,
+        });
+
+        if (!existingSubscription) {
+            return res.status(404).json({ message: 'Subscription not found' });
+        }
+
+        res.status(200).json({ message: 'Unsubscribed successfully' });
+    } catch (error) {
+        console.error('Error unsubscribing:', error.message || error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+module.exports = router;
 
 module.exports = router;
