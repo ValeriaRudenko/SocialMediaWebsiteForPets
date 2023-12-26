@@ -30,7 +30,7 @@ const Profile = () => {
             // Get the token from wherever you stored it (e.g., session storage)
             const token = sessionStorage.getItem('token');
             // Make a GET request to the server endpoint with the token in the headers
-            const response = await axios.get('http://localhost:5000/api/profile', {
+            const response = await axios.post('http://localhost:5000/api/profile', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
