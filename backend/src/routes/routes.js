@@ -441,15 +441,38 @@ router.post('/posts', postImageUpload.single('image'), handleFileTooLarge, async
 });
 
 
-
-router.post('/additions', async (req, res) => {
+const additionImageUpload = multer({
+    storage: multer.diskStorage({
+        destination: './public/images/additions/',
+        filename: (req, file, cb) => {
+            const originalExtension = require('path').extname(file.originalname);
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            const fileName = file.fieldname + '-' + uniqueSuffix + originalExtension;
+            cb(null, fileName);
+        },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5 MB
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed.'));
+        }
+    },
+});
+router.post('/additions', additionImageUpload.single('image'), handleFileTooLarge, async (req, res) => {
     try {
+        // Check if the image upload was successful
+        if (!req.file) {
+            return res.status(400).json({ message: 'No image file provided' });
+        }
+
         // Extract addition data from the request body
         const { image, label, text } = req.body;
 
         // Create a new addition
         const newAddition = new Addition({
-            image,
+            image: '/images/additions/' + req.file.filename,
             label,
             text,
         });
@@ -459,7 +482,7 @@ router.post('/additions', async (req, res) => {
 
         res.status(201).json({ message: 'Addition created successfully', addition: newAddition });
     } catch (error) {
-               console.error('Error creating addition:', error.message || error);
+        console.error('Error creating addition:', error.message || error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
@@ -470,12 +493,37 @@ router.get('/additions', async (req, res) => {
         // Fetch all additions from the database
         const allAdditions = await Addition.find();
 
-        res.status(200).json({ additions: allAdditions });
+        // Map the additions to include image URLs
+        const additionsWithImages = await Promise.all(
+            allAdditions.map(async (addition) => {
+                const imageUrl = addition.image ? addition.image : null;
+
+                // Read the image file asynchronously
+                let imageData;
+                try {
+                    imageData = await fs.readFile(path.join(__dirname, '../../public', imageUrl), 'base64');
+                } catch (readError) {
+                    console.error('Error reading image file:', readError.message || readError);
+                    imageData = null;
+                }
+
+                return {
+                    _id: addition._id,
+                    label: addition.label,
+                    text: addition.text,
+                    imageUrl,
+                    imageData,
+                };
+            })
+        );
+
+        res.status(200).json({ additions: additionsWithImages });
     } catch (error) {
         console.error('Error getting all additions:', error.message || error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 
 router.get('/posts', async (req, res) => {

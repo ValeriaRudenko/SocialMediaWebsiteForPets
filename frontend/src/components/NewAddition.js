@@ -9,22 +9,14 @@ const AddAddition = () => {
 
     const handleAddAddition = async () => {
         try {
-            const token = sessionStorage.getItem('token');
 
-            if (!token) {
-                setAdditionMessage('User not authenticated. Please sign in.');
-                return;
-            }
+            const formData = new FormData();
+            formData.append('image', image);
+            formData.append('label', label);
+            formData.append('text', text);
 
-            const formData = {
-                label,
-                text
-            };
 
             const response = await axios.post('http://localhost:5000/api/additions', formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
             });
 
             console.log('Addition Created Successfully:', response.data.message);

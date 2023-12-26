@@ -35,7 +35,11 @@ const Additions = () => {
                         {allAdditions.map((addition) => (
                             <div key={addition._id} className="col-lg-4 mb-4">
                                 <div className="card">
-                                    <img className="card-img-top" src={addition.image} alt="Addition" />
+                                    <img
+                                        className="card-img-top"
+                                        src={`data:image/jpeg;base64,${addition.imageData}`} // Assuming addition.imageData is base64 image data
+                                        alt="Addition"
+                                    />
                                     <div className="card-body">
                                         <h5 className="card-title">{addition.label}</h5>
                                         <p className="card-text">{addition.text}</p>
