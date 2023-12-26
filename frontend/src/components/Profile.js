@@ -43,11 +43,6 @@ const Profile = () => {
             setBreed(userData.breed);
             setPetType(userData.type);
 
-            // Fetch the avatar image
-            // const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
-            //     headers: {
-            //         Authorization: `Bearer ${token}`,
-            //     }});
             fetch('http://localhost:5000/api/avatar', {
                 headers: {
                     Authorization: `Bearer ${token}`,

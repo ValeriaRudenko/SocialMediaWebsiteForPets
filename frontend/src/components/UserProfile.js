@@ -76,17 +76,11 @@ const UserProfile = () => {
             setPetType(userData.type);
             setName(userData.fullName);
 
-            const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
-                headers: {
-                    Authorization: `Bearer ${id}`,
-                },
+            const avatarResponse = await axios.get(`http://localhost:5000/api/avatarbyid/${id}`, {
+                userId: id,
             });
-
-            const avatarBlob = await avatarResponse.data.blob();
-            if (avatarBlob.type.startsWith('image/jpeg') || avatarBlob.type.startsWith('image/png')) {
-                const objectURL = URL.createObjectURL(avatarBlob);
-                setAvatar(objectURL);
-            }
+            console.log(avatarResponse)
+            setAvatar(avatarResponse.data);
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
         }
@@ -131,7 +125,8 @@ const UserProfile = () => {
                         <img
                             id="avatar-image"
                             className={avatar ? 'avatar-with-image' : ''}
-                            src={avatar}
+                            src={`data:image/jpeg;base64,${avatar}`}
+
                             alt="Avatar"
                         />
                         <div>
