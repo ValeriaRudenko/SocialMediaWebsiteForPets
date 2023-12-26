@@ -35,6 +35,7 @@ router.get('/profile', async (req, res) => {
             age: pet ? pet.age : null,
             breed: pet ? pet.breed : null,
             type: pet ? pet.type : null,
+            id: userId,
         });
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {

@@ -66,7 +66,7 @@ const UserProfile = () => {
 
     const fetchProfileData = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/profilebyid', {
+            const response = await axios.get('http://localhost:5000/api/profilebyid', {
                 id,
             });
 
@@ -79,7 +79,6 @@ const UserProfile = () => {
             const avatarResponse = await axios.get(`http://localhost:5000/api/avatarbyid/${id}`, {
                 userId: id,
             });
-            console.log(avatarResponse)
             setAvatar(avatarResponse.data);
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
