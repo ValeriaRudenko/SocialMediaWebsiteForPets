@@ -32,7 +32,9 @@ const Navigation = () => {
                 </div>
                 <div className="col d-flex justify-content-center">
                     <button onClick={() => handlePageChange('')}>Home</button>
-                    <button onClick={() => handlePageChange('subscriptions')}>Subscriptions</button>
+                    {token && isTokenValid ? (
+                        <button onClick={() => handlePageChange('subscriptions')}>Subscriptions</button>
+                    ) : null}
                     <button onClick={() => handlePageChange('adds')}>Additions</button>
                     <button onClick={() => handlePageChange('search')}>Search</button>
                     <button onClick={() => handlePageChange('newpost')}>New post</button>
