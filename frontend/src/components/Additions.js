@@ -21,37 +21,34 @@ const Additions = () => {
     }, []);
 
     return (
-        <div className="container">
-            <h2 className="text-center mb-4">All Additions</h2>
-            <button className="btn btn-primary mb-3" onClick={() => handlePageChange('addaddition')}>
-                New addition
-            </button>
 
-            <div className="row">
-                <div className="col"></div>
-                <div className="col d-flex justify-content-center">
-                    <div className="container">
-                        {/* Display All Additions */}
-                        {allAdditions.map((addition) => (
-                            <div key={addition._id} className="col-lg-4 mb-4">
-                                <div className="card">
+            <div className="container text-center mt-5">
+                <h2 className="mb-4">All Additions</h2>
+                <button className="btn btn-primary mb-3" onClick={() => handlePageChange('addaddition')}>
+                    New addition
+                </button>
+                <div className="row">
+                    {allAdditions.map((addition) => (
+                        <div key={addition._id} className="col-lg-4 col-md-6 mb-4">
+                            <div className="card p-3" style={{ boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+                                {addition.imageData && (
                                     <img
                                         className="card-img-top"
-                                        src={`data:image/jpeg;base64,${addition.imageData}`} // Assuming addition.imageData is base64 image data
+                                        src={`data:image/jpeg;base64,${addition.imageData}`}
                                         alt="Addition"
+                                        style={{ maxHeight: '200px', objectFit: 'cover' }}
                                     />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{addition.label}</h5>
-                                        <p className="card-text">{addition.text}</p>
-                                    </div>
+                                )}
+                                <div className="card-body">
+                                    <h5 className="card-title mb-3">{addition.label}</h5>
+                                    <p className="card-text mb-2">{addition.text}</p>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
-                <div className="col"></div>
             </div>
-        </div>
+
     );
 };
 
