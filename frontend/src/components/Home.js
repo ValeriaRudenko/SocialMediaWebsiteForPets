@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const PORT = window.env.PORT
+const IP = window.env.IP
 const Home = () => {
     const [popularPosts, setPopularPosts] = useState([]);
     const [comments, setComments] = useState({}); // Store comments for each post using post ID as keys
@@ -9,8 +11,9 @@ const Home = () => {
     useEffect(() => {
         // Fetch popular posts when the component mounts
         const fetchPopularPosts = async () => {
+            console.log( `http://${IP}:${PORT}/api/posts`);
             try {
-                const response = await axios.get('http://localhost:5000/api/posts');
+                const response = await axios.get( `http://${IP}:${PORT}/api/posts`);
                 setPopularPosts(response.data.posts);
             } catch (error) {
                 console.error('Error fetching popular posts:', error.message || error);
@@ -31,7 +34,7 @@ const Home = () => {
             }
 
             const response = await axios.post(
-                'http://localhost:5000/api/comments',
+                `http://${IP}:${PORT}/api/comments`,
                 {
                     text: commentInputs[postId] || '', // Get the comment from the correct input field
                     postId: postId,
@@ -65,7 +68,7 @@ const Home = () => {
 
     const fetchCommentsForPost = async (postId) => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/comments/${postId}`);
+            const response = await axios.get(`http://${IP}:${PORT}/api/comments/${postId}`);
             setComments((prevComments) => ({
                 ...prevComments,
                 [postId]: response.data.comments,

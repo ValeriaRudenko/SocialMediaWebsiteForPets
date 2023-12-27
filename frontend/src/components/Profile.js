@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
+const PORT = window.env.PORT
+const IP = window.env.IP
 
 const Profile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -31,7 +33,7 @@ const Profile = () => {
             // Get the token from wherever you stored it (e.g., session storage)
             const token = sessionStorage.getItem('token');
             // Make a GET request to the server endpoint with the token in the headers
-            const response = await axios.get('http://localhost:5000/api/profile', {
+            const response = await axios.get(`http://${IP}:${PORT}/api/profile`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -44,7 +46,7 @@ const Profile = () => {
             setBreed(userData.breed);
             setPetType(userData.type);
 
-            const avatarResponse = await axios.get(`http://localhost:5000/api/avatarbyid/${userData.id}`, {
+            const avatarResponse = await axios.get(`http://${IP}:${PORT}/api/avatarbyid/${userData.id}`, {
                 userId: userData.id,
             });
             setAvatar(avatarResponse.data);
@@ -86,7 +88,7 @@ const Profile = () => {
                 type,
             };
             // Make a POST request to the server endpoint with the token in the headers
-            const response = await axios.post('http://localhost:5000/api/profile', userData, {
+            const response = await axios.post(`http://${IP}:${PORT}/api/profile`, userData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -108,7 +110,7 @@ const Profile = () => {
             const formData = new FormData();
             formData.append('image', file); // 'image' should match the fieldname used in multer.single()
 
-            const response = await axios.post('http://localhost:5000/api/upload', formData, {
+            const response = await axios.post(`http://${IP}:${PORT}/api/upload`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',

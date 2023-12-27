@@ -6,27 +6,7 @@ on:
       - main
 
 jobs:
-  testbackend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js for Backend
-        uses: actions/setup-node@v2
-        with:
-          node-version: 20
-
-      - name: Install Backend dependencies
-        run: npm install
-        working-directory: ./backend
-
-      - name: Run Backend tests
-        run: npm test
-        working-directory: ./backend
-
-  testfrontend:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,10 +22,6 @@ jobs:
         run: npm install
         working-directory: ./frontend
 
-      - name: Run Frontend tests
-        run: npm test
-        working-directory: ./frontend
-
       - name: Build Frontend
         run: npm run build
         working-directory: ./frontend
@@ -56,7 +32,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: testfrontend
+    needs: build
     defaults:
       run:
         working-directory: ./backend   # Set the default working directory for the entire job

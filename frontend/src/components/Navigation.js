@@ -3,10 +3,12 @@ import './Navigation.css';
 
 const axios = require('axios');
 
+const PORT = window.env.PORT
+const IP = window.env.IP
 const token = sessionStorage.getItem('token');
 async function isTokenValid() {
     try {
-        const response = await axios.get('http://your-api-base-url/validate-token', {
+        const response = await axios.get(`http://${IP}:${PORT}/validate-token`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
