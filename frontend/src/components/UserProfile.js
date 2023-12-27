@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './Profile.css';
 import './Sign.css';
 import { useParams } from 'react-router-dom';
-const PORT = window.env.PORT
-const IP = window.env.IP
+
+const PORT = window.env.PORT;
+const IP = window.env.IP;
 
 const UserProfile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -16,57 +17,7 @@ const UserProfile = () => {
     const [isFollowed, setIsFollowed] = useState(false);
     const { id } = useParams();
 
-    const handleFollowButtonClick = async () => {
-        try {
-            const token = sessionStorage.getItem('token');
-            // Make a POST request to the server endpoint with the token in the headers
-            const response = await axios.post(`http://${IP}:${PORT}/api/subscribe`, {
-                subscribedUserId: id,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.status === 201) {
-                setIsFollowed(true);
-            } else {
-                console.error('Failed to follow user:', response.data.message);
-            }
-        } catch (error) {
-            console.error('Error following user:', error.message || error);
-        }
-    };
-
-    const handleUnfollowButtonClick = async () => {
-        try {
-            const token = sessionStorage.getItem('token');
-            // Make a POST request to the server endpoint with the token in the headers
-            const response = await axios.post(`http://${IP}:${PORT}/api/unsubscribe`, {
-                subscribedUserId: id,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.status === 200) {
-                setIsFollowed(false);
-            } else {
-                console.error('Failed to unfollow user:', response.data.message);
-            }
-        } catch (error) {
-            console.error('Error unfollowing user:', error.message || error);
-        }
-    };
-
-    useEffect(() => {
-        fetchProfileData();
-        fetchUserPosts();
-        checkSubscriptionStatus();
-    }, [checkSubscriptionStatus, fetchProfileData, fetchUserPosts, id]);
-
-    const fetchProfileData = async () => {
+    const fetchProfileData = useCallback(async () => {
         try {
             const response = await axios.get(`http://${IP}:${PORT}/api/profilebyid`, {
                 id,
@@ -85,34 +36,93 @@ const UserProfile = () => {
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
         }
-    };
+    }, [id]);
 
-    const fetchUserPosts = async () => {
+    const fetchUserPosts = useCallback(async () => {
         try {
             const response = await axios.get(`http://${IP}:${PORT}/api/posts/${id}`);
             setPosts(response.data.posts);
         } catch (error) {
             console.error('Error fetching user posts:', error.message || error);
         }
-    };
+    }, [id]);
 
-    const checkSubscriptionStatus = async () => {
+    const checkSubscriptionStatus = useCallback(async () => {
         try {
             const token = sessionStorage.getItem('token');
-            // Make a POST request to the server endpoint with the token in the headers
-            const response = await axios.post(`http://${IP}:${PORT}/api/checksubscription`, {
-                subscribedUserId: id,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+            const response = await axios.post(
+                `http://${IP}:${PORT}/api/checksubscription`,
+                {
+                    subscribedUserId: id,
                 },
-            });
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             setIsFollowed(response.data.isSubscribed);
         } catch (error) {
             console.error('Error checking subscription status:', error.message || error);
         }
+    }, [id]);
+
+    const handleFollowButtonClick = async () => {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await axios.post(
+                `http://${IP}:${PORT}/api/subscribe`,
+                {
+                    subscribedUserId: id,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 201) {
+                setIsFollowed(true);
+            } else {
+                console.error('Failed to follow user:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error following user:', error.message || error);
+        }
     };
+
+    const handleUnfollowButtonClick = async () => {
+        try {
+            const token = sessionStorage.getItem('token');
+            const response = await axios.post(
+                `http://${IP}:${PORT}/api/unsubscribe`,
+                {
+                    subscribedUserId: id,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                setIsFollowed(false);
+            } else {
+                console.error('Failed to unfollow user:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error unfollowing user:', error.message || error);
+        }
+    };
+
+    useEffect(() => {
+        fetchProfileData();
+        fetchUserPosts();
+        checkSubscriptionStatus();
+    }, [fetchProfileData, fetchUserPosts, checkSubscriptionStatus, id]);
 
     return (
         <div className="row">
@@ -127,19 +137,14 @@ const UserProfile = () => {
                             id="avatar-image"
                             className={avatar ? 'avatar-with-image' : ''}
                             src={`data:image/jpeg;base64,${avatar}`}
-
                             alt="Avatar"
                         />
                         <div>
                             <div>
                                 {isFollowed ? (
-                                    <button onClick={handleUnfollowButtonClick}>
-                                        Unfollow
-                                    </button>
+                                    <button onClick={handleUnfollowButtonClick}>Unfollow</button>
                                 ) : (
-                                    <button onClick={handleFollowButtonClick}>
-                                        Follow
-                                    </button>
+                                    <button onClick={handleFollowButtonClick}>Follow</button>
                                 )}
                             </div>
                             <div>

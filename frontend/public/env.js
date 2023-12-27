@@ -20,6 +20,7 @@ window.env = {
   "INIT_CWD": "C:\\Github\\e14\\frontend",
   "IntelliJ IDEA": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2023.2.5\\bin;",
   "IntelliJ IDEA Community Edition": "C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2022.1.3\\bin;",
+  "IP": "localhost",
   "LOCALAPPDATA": "C:\\Users\\olegp\\AppData\\Local",
   "LOGONSERVER": "\\\\LAPTOP-H1CGMHLJ",
   "NODE": "C:\\Program Files\\nodejs\\node.exe",
@@ -56,6 +57,7 @@ window.env = {
   "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC",
   "PhpStorm": "C:\\Program Files\\JetBrains\\PhpStorm 2022.3.2\\bin;",
   "platformcode": "M7",
+  "PORT": "5000",
   "PROCESSOR_ARCHITECTURE": "AMD64",
   "PROCESSOR_IDENTIFIER": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
   "PROCESSOR_LEVEL": "25",
@@ -81,8 +83,5 @@ window.env = {
   "VBOX_HWVIRTEX_IGNORE_SVM_IN_USE": "1",
   "VBOX_MSI_INSTALL_PATH": "D:\\VirtualBox\\",
   "windir": "C:\\WINDOWS",
-  "__PSLockDownPolicy": "0",
-  "PORT":5000,
-  "IP":"localhost",
-
+  "__PSLockDownPolicy": "0"
 };
