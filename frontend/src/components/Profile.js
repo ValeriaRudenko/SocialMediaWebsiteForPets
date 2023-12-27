@@ -27,10 +27,11 @@ const Profile = () => {
 
     const fetchProfileData = async () => {
         try {
+
             // Get the token from wherever you stored it (e.g., session storage)
             const token = sessionStorage.getItem('token');
             // Make a GET request to the server endpoint with the token in the headers
-            const response = await axios.post('http://localhost:5000/api/profile', {
+            const response = await axios.get('http://localhost:5000/api/profile', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -42,11 +43,11 @@ const Profile = () => {
             setAge(userData.age);
             setBreed(userData.breed);
             setPetType(userData.type);
-            console.log(userData.id)
-            // const avatarResponse = await axios.get(`http://localhost:5000/api/avatarbyid/${userData.id}`, {
-            //     userId: userData.id,
-            // });
-            // setAvatar(avatarResponse.data);
+
+            const avatarResponse = await axios.get(`http://localhost:5000/api/avatarbyid/${userData.id}`, {
+                userId: userData.id,
+            });
+            setAvatar(avatarResponse.data);
 
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
@@ -131,7 +132,7 @@ const Profile = () => {
                         <img
                             id="avatar-image"
                             className={avatar ? 'avatar-with-image' : ''}
-                            src={avatar}
+                            src={`data:image/jpeg;base64,${avatar}`}
                             alt="Avatar"
                             onClick={handleAvatarClick}
                         />
@@ -152,9 +153,6 @@ const Profile = () => {
                             )}
                             {avatar && (
                                 <div>
-                                    <label className="upload-label" id="delete-avatar" onClick={() => setAvatar(null)}>
-                                        Delete Avatar
-                                    </label>
                                     <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
                                         Change Avatar
                                     </label>
