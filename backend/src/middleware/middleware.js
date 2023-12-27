@@ -14,7 +14,7 @@ const handleFileTooLarge = async (err, req, res, next) => {
 
 const imageUpload = multer({
     storage: multer.diskStorage({
-        destination: './public/images/',
+        destination: './public/images/avatars',
         filename: (req, file, cb) => {
             const originalExtension = require('path').extname(file.originalname);
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

@@ -67,10 +67,40 @@ router.get('/avatar', async (req, res) => {
         }
 
         // Construct the path to the avatar image
-        const avatarPath = path.join(__dirname, '../../public/images/', user.avatar);
+        const avatar = path.join(__dirname, '../../public/images/avatars/', user.avatar);
 
         // Send the image file
-        res.sendFile(avatarPath);
+        return(avatar);
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        console.error('Error retrieving user avatar:', error.message || error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+router.get('/avatarbyid/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Retrieve user from the database based on the user ID
+        const user = await User.findById(userId);
+        if (!user || !user.avatar) {
+            return res.status(404).json({ message: 'User or avatar not found' });
+        }
+
+        // Construct the path to the avatar image
+        const imagePath = path.join(__dirname, '../../public/images/avatars', user.avatar);
+
+        // Read the image file using fs.promises.readFile
+        const avatar = await fs.readFile(imagePath, { encoding: 'base64' });
+
+        // Send the image file
+        res.send(avatar);
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
             return res.status(401).json({ message: 'Invalid token' });

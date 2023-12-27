@@ -106,9 +106,13 @@ async function createIndexes() {
 }
 
 async function downloadImage(url, uniqueSuffix) {
-    const response = await axios.get(url, { responseType: 'stream' });
-    response.data.pipe(fs.createWriteStream('./backend/public/images/' + uniqueSuffix));
-    console.log('Image downloaded!');
+    try {
+        const response = await axios.get(url, {responseType: 'stream'});
+        response.data.pipe(fs.createWriteStream('./backend/public/images/' + uniqueSuffix));
+        console.log('Image downloaded!');
+    }catch (e){
+        console.log('Image not downloaded!');
+    }
 }
 
 
@@ -122,9 +126,9 @@ async function generateData() {
             const hashedPassword = await bcrypt.hash(password, 10);
             const email = faker.internet.email();
 
-            image = faker.image.url();
+            image = faker.image.urlLoremFlickr({ category: 'animals' }) ;
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)+'.jpg';
-            downloadImage(image,uniqueSuffix);
+            downloadImage(image,'avatars/'+uniqueSuffix);
 
             const user = new User({
                 username: faker.internet.userName(),
@@ -137,9 +141,9 @@ async function generateData() {
         }
 
         // Generate additions
-        for (let i = 0; i < 5; i++) {
-            image = faker.image.url();
-            const uniqueSuffix = 'posts/'+Date.now() + '-' + Math.round(Math.random() * 1E9)+'.jpg';
+        for (let i = 0; i < 15; i++) {
+            image = faker.image.urlLoremFlickr({ category: 'animals' })
+            const uniqueSuffix = 'additions/'+Date.now() + '-' + Math.round(Math.random() * 1E9)+'.jpg';
             downloadImage(image,uniqueSuffix);
 
             const addition = new Addition({
@@ -167,7 +171,7 @@ async function generateData() {
         // Generate posts
         for (let user of users) {
             for (let i = 0; i < 5; i++) {
-                image = faker.image.url();
+                image = faker.image.urlLoremFlickr({ category: 'animals' })
                 const uniqueSuffix = 'posts/'+Date.now() + '-' + Math.round(Math.random() * 1E9)+'.jpg';
                 downloadImage(image,uniqueSuffix);
 

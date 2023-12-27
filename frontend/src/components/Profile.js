@@ -27,10 +27,11 @@ const Profile = () => {
 
     const fetchProfileData = async () => {
         try {
+
             // Get the token from wherever you stored it (e.g., session storage)
             const token = sessionStorage.getItem('token');
             // Make a GET request to the server endpoint with the token in the headers
-            const response = await axios.post('http://localhost:5000/api/profile', {
+            const response = await axios.get('http://localhost:5000/api/profile', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -43,34 +44,10 @@ const Profile = () => {
             setBreed(userData.breed);
             setPetType(userData.type);
 
-            // Fetch the avatar image
-            // const avatarResponse = await axios.get('http://localhost:5000/api/avatar', {
-            //     headers: {
-            //         Authorization: `Bearer ${token}`,
-            //     }});
-            fetch('http://localhost:5000/api/avatar', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    if (blob.type.startsWith('image/jpeg') || blob.type.startsWith('image/png')) {
-                        // Check if the blob is of type JPEG or PNG
-                        const objectURL = URL.createObjectURL(blob);
-                        setAvatar(objectURL);
-                    } else {
-                        throw new Error('The response is not a JPEG or PNG image.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching image:', error);
-                });
+            const avatarResponse = await axios.get(`http://localhost:5000/api/avatarbyid/${userData.id}`, {
+                userId: userData.id,
+            });
+            setAvatar(avatarResponse.data);
 
         } catch (error) {
             console.error('Error fetching profile data:', error.message || error);
@@ -155,7 +132,7 @@ const Profile = () => {
                         <img
                             id="avatar-image"
                             className={avatar ? 'avatar-with-image' : ''}
-                            src={avatar}
+                            src={`data:image/jpeg;base64,${avatar}`}
                             alt="Avatar"
                             onClick={handleAvatarClick}
                         />
@@ -176,9 +153,6 @@ const Profile = () => {
                             )}
                             {avatar && (
                                 <div>
-                                    <label className="upload-label" id="delete-avatar" onClick={() => setAvatar(null)}>
-                                        Delete Avatar
-                                    </label>
                                     <label className="upload-label" id="upload-label" htmlFor="avatar-upload">
                                         Change Avatar
                                     </label>
