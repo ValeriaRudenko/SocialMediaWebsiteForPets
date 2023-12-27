@@ -64,7 +64,7 @@ const UserProfile = () => {
         fetchProfileData();
         fetchUserPosts();
         checkSubscriptionStatus();
-    }, [id]);
+    }, [checkSubscriptionStatus, fetchProfileData, fetchUserPosts, id]);
 
     const fetchProfileData = async () => {
         try {
