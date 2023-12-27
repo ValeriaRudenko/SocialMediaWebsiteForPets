@@ -19,7 +19,7 @@ const UserProfile = () => {
 
     const fetchProfileData = useCallback(async () => {
         try {
-            const response = await axios.get(`http://${IP}:${PORT}/api/profilebyid`, {
+            const response = await axios.post(`http://${IP}:${PORT}/api/profilebyid`, {
                 id,
             });
 
