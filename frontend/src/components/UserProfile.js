@@ -3,6 +3,8 @@ import axios from 'axios';
 import './Profile.css';
 import './Sign.css';
 import { useParams } from 'react-router-dom';
+const PORT = window.env.PORT
+const IP = window.env.IP
 
 const UserProfile = () => {
     const [avatar, setAvatar] = useState(null);
@@ -18,7 +20,7 @@ const UserProfile = () => {
         try {
             const token = sessionStorage.getItem('token');
             // Make a POST request to the server endpoint with the token in the headers
-            const response = await axios.post('http://localhost:5000/api/subscribe', {
+            const response = await axios.post(`http://${IP}:${PORT}/api/subscribe`, {
                 subscribedUserId: id,
             }, {
                 headers: {
@@ -40,7 +42,7 @@ const UserProfile = () => {
         try {
             const token = sessionStorage.getItem('token');
             // Make a POST request to the server endpoint with the token in the headers
-            const response = await axios.post('http://localhost:5000/api/unsubscribe', {
+            const response = await axios.post(`http://${IP}:${PORT}/api/unsubscribe`, {
                 subscribedUserId: id,
             }, {
                 headers: {
@@ -66,7 +68,7 @@ const UserProfile = () => {
 
     const fetchProfileData = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/profilebyid', {
+            const response = await axios.get(`http://${IP}:${PORT}/api/profilebyid`, {
                 id,
             });
 
@@ -76,7 +78,7 @@ const UserProfile = () => {
             setPetType(userData.type);
             setName(userData.fullName);
 
-            const avatarResponse = await axios.get(`http://localhost:5000/api/avatarbyid/${id}`, {
+            const avatarResponse = await axios.get(`http://${IP}:${PORT}/api/avatarbyid/${id}`, {
                 userId: id,
             });
             setAvatar(avatarResponse.data);
@@ -87,7 +89,7 @@ const UserProfile = () => {
 
     const fetchUserPosts = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/posts/${id}`);
+            const response = await axios.get(`http://${IP}:${PORT}/api/posts/${id}`);
             setPosts(response.data.posts);
         } catch (error) {
             console.error('Error fetching user posts:', error.message || error);
@@ -98,7 +100,7 @@ const UserProfile = () => {
         try {
             const token = sessionStorage.getItem('token');
             // Make a POST request to the server endpoint with the token in the headers
-            const response = await axios.post('http://localhost:5000/api/checksubscription', {
+            const response = await axios.post(`http://${IP}:${PORT}/api/checksubscription`, {
                 subscribedUserId: id,
             }, {
                 headers: {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+const PORT = window.env.PORT
+const IP = window.env.IP
 const Subscriptions = () => {
     const [subscriptionPosts, setSubscriptionPosts] = useState([]);
     const [comments, setComments] = useState({}); // Store comments for each post using post ID as keys
@@ -17,7 +18,7 @@ const Subscriptions = () => {
                     return;
                 }
 
-                const response = await axios.get('http://localhost:5000/api/subscriptionposts', {
+                const response = await axios.get(`http://${IP}:${PORT}/api/subscriptionposts`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -42,7 +43,7 @@ const Subscriptions = () => {
             }
 
             const response = await axios.post(
-                'http://localhost:5000/api/comments',
+                `http://${IP}:${PORT}/api/comments`,
                 {
                     text: commentInputs[postId] || '', // Get the comment from the correct input field
                     postId: postId,
@@ -76,7 +77,7 @@ const Subscriptions = () => {
 
     const fetchCommentsForPost = async (postId) => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/comments/${postId}`);
+            const response = await axios.get(`http://${IP}:${PORT}/api/comments/${postId}`);
             setComments((prevComments) => ({
                 ...prevComments,
                 [postId]: response.data.comments,

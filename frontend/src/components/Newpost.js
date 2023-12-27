@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+const PORT = window.env.PORT
+const IP = window.env.IP
 const NewPost = () => {
     const [image, setImage] = useState(null);
     const [label, setLabel] = useState('');
@@ -21,7 +22,7 @@ const NewPost = () => {
             formData.append('label', label);
             formData.append('text', text);
 
-            const response = await axios.post('http://localhost:5000/api/posts', formData, {
+            const response = await axios.post(`http://${IP}:${PORT}/api/posts`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

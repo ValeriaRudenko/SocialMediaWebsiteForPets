@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 
+const PORT = window.env.PORT
+const IP = window.env.IP
 const Search = () => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
@@ -8,7 +10,7 @@ const Search = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/users'); // replace with your actual API endpoint
+                const response = await axios.get(`http://${IP}:${PORT}/api/users`); // replace with your actual API endpoint
                 setUsers(response.data);
             } catch (error) {
                 console.error('Error fetching users:', error.message || error);
@@ -25,8 +27,7 @@ const Search = () => {
         window.location.href = `/${page}`;
     };
     const filteredUsers = users.filter(user => {
-        const similarity = user.username.toLowerCase().includes(search.toLowerCase());
-        return similarity;
+        return user.username.toLowerCase().includes(search.toLowerCase());
     });
 
     return (

@@ -2,8 +2,8 @@
 
 import React, {useState} from 'react';
 import axios from 'axios';
-//import './Sign.css'; // Import the CSS file
-
+const PORT = window.env.PORT
+const IP = window.env.IP
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ const SignUp = () => {
 
     const handleSignUp = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/signup', {
+            const response = await axios.post(`http://${IP}:${PORT}/api/signup`, {
                 username,
                 email,
                 password,

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+const PORT = window.env.PORT
+const IP = window.env.IP
 
 const AddAddition = () => {
     const [image, setImage] = useState(null);
@@ -16,7 +18,7 @@ const AddAddition = () => {
             formData.append('text', text);
 
 
-            const response = await axios.post('http://localhost:5000/api/additions', formData, {
+            const response = await axios.post(`http://${IP}:${PORT}/api/additions`, formData, {
             });
 
             console.log('Addition Created Successfully:', response.data.message);
