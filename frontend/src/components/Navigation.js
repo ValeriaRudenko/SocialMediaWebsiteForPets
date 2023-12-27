@@ -39,7 +39,10 @@ const Navigation = () => {
                     ) : null}
                     <button onClick={() => handlePageChange('adds')}>Additions</button>
                     <button onClick={() => handlePageChange('search')}>Search</button>
-                    <button onClick={() => handlePageChange('newpost')}>New post</button>
+
+                    {token && isTokenValid ? (
+                        <button onClick={() => handlePageChange('newpost')}>New post</button>
+                    ) : null}
                 </div>
                 <div className="col d-flex justify-content-end">
 
