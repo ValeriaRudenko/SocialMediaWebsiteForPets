@@ -27,7 +27,7 @@ const Additions = () => {
 
             <div className="container text-center mt-5">
                 <h2 className="mb-4">All Additions</h2>
-                <button className="btn btn-primary mb-3" onClick={() => handlePageChange('addaddition')}>
+                <button className="button_in_cont"  onClick={() => handlePageChange('addaddition')}>
                     New addition
                 </button>
                 <div className="row">

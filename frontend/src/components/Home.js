@@ -96,7 +96,7 @@ const Home = () => {
                     placeholder="Type your comment"
                 />
                 {/* Button to send comments */}
-                <button className="btn btn-primary" onClick={() => handleSendComment(post._id)}>
+                <button className="button_in_cont" onClick={() => handleSendComment(post._id)}>
                     Send Comment
                 </button>
             </div>
