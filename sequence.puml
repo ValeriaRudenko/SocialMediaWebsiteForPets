@@ -1,0 +1,14 @@
+@startuml
+actor User
+participant "Express App" as App
+database MongoDB
+
+User -> App: HTTP GET /profile
+activate App
+App -> MongoDB: Query user profile
+activate MongoDB
+MongoDB --> App: User profile data
+deactivate MongoDB
+App --> User: User profile response
+deactivate App
+@enduml

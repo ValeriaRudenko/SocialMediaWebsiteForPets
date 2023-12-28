@@ -1,0 +1,55 @@
+@startuml
+class User {
+  +_id: ObjectId
+  +username: String
+  +email: String
+  +password: String
+  +avatar: String
+}
+
+class Pet {
+  +_id: ObjectId
+  +name: String
+  +age: Number
+  +breed: String
+  +type: String
+  +owner: ObjectId
+}
+
+class Addition {
+  +_id: ObjectId
+  +image: String
+  +label: String
+  +text: String
+}
+
+class Comment {
+  +_id: ObjectId
+  +text: String
+  +autor: ObjectId
+  +post: ObjectId
+}
+
+class Post {
+  +_id: ObjectId
+  +image: String
+  +label: String
+  +text: String
+  +author: ObjectId
+}
+
+class Subscription {
+  +_id: ObjectId
+  +subscribed: ObjectId
+  +subscriber: ObjectId
+}
+
+User --{ Pet
+User --{ Subscription
+Pet --{ Subscription
+User --{ Comment
+User --{ Post
+Post --{ Comment
+User --{ Addition
+
+@enduml
