@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 
-const PORT = window.env.PORT
+const PORT = window.env.BACKENDPORT
 const IP = window.env.IP
 const Additions = () => {
     const [allAdditions, setAllAdditions] = useState([]);

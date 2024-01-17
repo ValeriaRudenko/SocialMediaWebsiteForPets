@@ -3,7 +3,7 @@ import './Navigation.css';
 
 const axios = require('axios');
 
-const PORT = window.env.PORT
+const PORT = window.env.BACKENDPORT
 const IP = window.env.IP
 const token = sessionStorage.getItem('token');
 async function isTokenValid() {

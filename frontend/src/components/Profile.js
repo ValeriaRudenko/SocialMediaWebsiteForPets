@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.css';
-const PORT = window.env.PORT
+const PORT = window.env.BACKENDPORT
 const IP = window.env.IP
 
 const Profile = () => {

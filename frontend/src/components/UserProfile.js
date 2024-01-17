@@ -4,7 +4,7 @@ import './Profile.css';
 import './Sign.css';
 import { useParams } from 'react-router-dom';
 
-const PORT = window.env.PORT;
+const PORT = window.env.BACKENDPORT;
 const IP = window.env.IP;
 
 const UserProfile = () => {
