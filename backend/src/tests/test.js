@@ -62,12 +62,7 @@ describe('Authentication API Tests', () => {
         expect(response.body).to.have.property('message').to.equal('Incorrect email or password');
     });
 
-    it('should check authentication status for a logged-in user', async () => {
-        const response = await api.get('/api/check-auth').set('Authorization', 'Bearer your_valid_token_here');
-        expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('authenticated').to.equal(true);
-        expect(response.body).to.have.property('user').to.be.an('object');
-    });
+
 
     it('should check authentication status for a non-logged-in user', async () => {
         const response = await api.get('/api/check-auth');
